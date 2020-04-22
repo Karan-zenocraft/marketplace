@@ -16,39 +16,42 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]);?>
 <div class="row">
-                <div class="span3 style_input_width">
+                
      <div class="span3 style_input_width"><?=$form->field($model, 'role_id')->dropDownList($UserRolesDropdown, ['class' => 'roles'])?></div>
-</div>
+
  <div class="span3 style_input_width">
-    <?=$form->field($model, 'user_name')->textInput(['maxlength' => true])?>
+    <?=$form->field($model, 'first_name')->textInput(['maxlength' => true])?>
 </div>
 </div>
 <div class="row">
+  <div class="span3 style_input_width">
+    <?=$form->field($model, 'last_name')->textInput(['maxlength' => true])?>
+</div>
                 <div class="span3 style_input_width">
     <?=$form->field($model, 'email')->textInput(['maxlength' => true])?>
 </div>
+</div>
+<div class="row">
  <?php if ($model->isNewRecord) {?>
 <div class="span3 style_input_width">
     <?=$form->field($model, 'password')->passwordInput(['maxlength' => true])?>
 </div>
 <?php }?>
-</div>
-<div class="row">
                 <div class="span3 style_input_width">
     <?=$form->field($model, 'phone')->textInput()?>
 </div>
- <div class="span3 style_input_width">
-     <?=$form->field($model, 'status')->dropDownList(Yii::$app->params['user_status']);?></div>
 </div>
 
 <div class="row">
+ <div class="span3 style_input_width">
+     <?=$form->field($model, 'status')->dropDownList(Yii::$app->params['user_status']);?></div>
 <div class="span3 style_input_width">
       <?=$form->field($model, 'photo')->fileInput(['id' => 'photo', 'value' => $model->photo]);?>
 </div>
 </div>
       <div class="row">
 <div class="span3">
-    <img id="image" width="100px" hieght="100px" src="<?php echo Yii::getAlias('@web') . "/../uploads/" . $model->photo; ?>" alt="" />
+    <img id="image" width="100px" hieght="100px" src="<?php echo Yii::getAlias('@web') . "/../uploads/profile_pictures/" . $model->photo; ?>" alt="" />
     </div>
 </div>
     <div class="form-group">

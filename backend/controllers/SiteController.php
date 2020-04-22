@@ -79,7 +79,7 @@ class SiteController extends AdminCoreController
                 if ($emailformatemodel) {
 
                     //create template file
-                    $AreplaceString = array('{password}' => $password, '{username}' => $usermodel->user_name, '{email}' => $usermodel->email);
+                    $AreplaceString = array('{password}' => $password, '{username}' => $usermodel->first_name." ".$model->last_name, '{email}' => $usermodel->email);
                     $body = Common::MailTemplate($AreplaceString, $emailformatemodel->body);
 
                     //send email for new generated password

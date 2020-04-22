@@ -84,13 +84,13 @@ class UsersController extends AdminCoreController
                 $file->saveAs(Yii::getAlias('@root') . '/uploads/profile_pictures/' . $file_filter);
             }
             $model->generateAuthKey();
-            $email_verify_link = Yii::$app->params['root_url'] . '/site/email-verify?verify=' . base64_encode($model->verification_code) . '&e=' . base64_encode($model->email);
+            $email_verify_link = Yii::$app->params['root_url'] . '/site/email-verify?verify=' . base64_encode($model->email_verification_code) . '&e=' . base64_encode($model->email);
             $model->save(false);
             $emailformatemodel = EmailFormat::findOne(["title" => 'backend_registration', "status" => '1']);
             if ($emailformatemodel) {
 
                 //create template file
-                $AreplaceString = array('{password}' => $_REQUEST['Users']['password'], '{username}' => $model->user_name, '{email}' => $model->email, '{role}' => $model->role->role_name);
+                $AreplaceString = array('{password}' => $_REQUEST['Users']['password'], '{username}' => $model->first_name." ".$model->last_name, '{email}' => $model->email, '{role}' => $model->role->role_name);
 
                 $body = Common::MailTemplate($AreplaceString, $emailformatemodel->body);
                 $ssSubject = $emailformatemodel->subject;
@@ -98,6 +98,7 @@ class UsersController extends AdminCoreController
                 $ssResponse = Common::sendMailToUser($model->email, Yii::$app->params['adminEmail'], $ssSubject, $body);
 
             }
+            Yii::$app->session->setFlash('success', Yii::getAlias('@user_add_message'));
             return $this->redirect(['users/index']);
 
         }
@@ -137,6 +138,7 @@ class UsersController extends AdminCoreController
                 $model->photo = $old_image;
             }
             $model->save();
+            Yii::$app->session->setFlash('success', Yii::getAlias('@user_update_message'));
             return $this->redirect(['users/index']);
         }
 
@@ -157,7 +159,7 @@ class UsersController extends AdminCoreController
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        Yii::$app->session->setFlash('success', Yii::getAlias('@user_delete_message'));
         return $this->redirect(['index']);
     }
 

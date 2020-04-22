@@ -26,18 +26,22 @@ use yii\widgets\ActiveForm;
 </div>
     <div class="span3 style_input_width">
 
-    <?=$form->field($model, 'user_name')?>
+    <?=$form->field($model, 'first_name')?>
 </div>
 </div>
 <div class="row">
+       <div class="span3 style_input_width">
+
+    <?=$form->field($model, 'last_name')?>
+</div>
 <div class="span3 style_input_width">
     <?=$form->field($model, 'email')?>
 </div>
+</div>
+<div class="row">
 <div class="span3 style_input_width">
     <?php echo $form->field($model, 'phone') ?>
 </div>
-</div>
-<div class="row">
 <div class="span3 style_input_width">
     <div class="span3 style_input_width"><?=$form->field($model, 'status')->dropDownList(Yii::$app->params['user_status']);?></div>
 </div>
@@ -65,7 +69,7 @@ use yii\widgets\ActiveForm;
 
     <div class="form-group">
         <?=Html::submitButton('Search', ['class' => 'btn btn-primary'])?>
-        <?=Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary'])?>
+        <?=Html::a(Yii::t('app', '<i class="icon-refresh"></i> clear'), Yii::$app->urlManager->createUrl(['users/index', "temp" => "clear"]), ['class' => 'btn btn-default'])?>
     </div>
 
     <?php ActiveForm::end();?>

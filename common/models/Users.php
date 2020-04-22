@@ -49,11 +49,14 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['role_id', 'user_name', 'email', 'password'], 'required'],
-            // [['role_id', 'badge_count', 'status'], 'integer'],
+            [['role_id', 'first_name','last_name', 'email', 'password','phone'], 'required'],
+            [['phone'], 'integer'],
+              [['email'], 'email'],
+            ['email', 'validateEmail'],
+            ['phone', 'validatePhone'],
             [['created_at', 'updated_at'], 'safe'],
             [['photo'], 'image', 'extensions' => 'jpg, jpeg, gif, png'],
-            [['user_name', 'email', 'password'], 'string', 'max' => 255],
+            [['email', 'password'], 'string', 'max' => 255],
             //  [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserRoles::className(), 'targetAttribute' => ['role_id' => 'id']],
         ];
     }
@@ -66,17 +69,34 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             'id' => 'ID',
             'role_id' => 'Role ID',
-            'user_name' => 'User Name',
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
             'email' => 'Email',
             'password' => 'Password',
             'photo' => 'Photo',
+            'phone' => 'Phone',
             'badge_count' => 'Badge Count',
             'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
     }
-
+ public function validateEmail()
+    {
+        $ASvalidateemail = Users::find()->where('email = "' . $this->email . '" and id != "' . $this->id . '"')->all();
+        if (!empty($ASvalidateemail)) {
+            $this->addError('email', 'This email is already registered.');
+            return true;
+        }
+    }
+    public function validatePhone()
+    {
+        $ASvalidatePhone = Users::find()->where('phone = "' . $this->phone . '" and id != "' . $this->id . '"')->all();
+        if (!empty($ASvalidatePhone)) {
+            $this->addError('phone', 'This phone is already registered.');
+            return true;
+        }
+    }
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -189,7 +209,7 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public function generateAuthKey()
     {
-        $this->verification_code = bin2hex(random_bytes(32));
+        $this->email_verification_code = bin2hex(random_bytes(32));
     }
 
     /**

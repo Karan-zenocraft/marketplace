@@ -39,9 +39,9 @@ class Users extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['role_id', 'age', 'gender', 'badge_count', 'status', 'restaurant_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
-            [['user_name', 'email', 'password', 'photo'], 'string', 'max' => 255],
+            [['role_id','badge_count', 'status'], 'integer'],
+            [['created_at', 'updated_at','first_name','last_name','phone','photo','email_verification_code','is_email_code_verified','is_phone_code_verified','user_status','is_approve','wallet'], 'safe'],
+            [['first_name', 'email', 'password', 'photo'], 'string', 'max' => 255],
             [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserRole::className(), 'targetAttribute' => ['role_id' => 'id']],
         ];
     }
@@ -54,7 +54,8 @@ class Users extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'role_id' => 'Role ID',
-            'user_name' => 'User Name',
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
             'email' => 'Email',
             'password' => 'Password',
             'age' => 'Age',
@@ -64,7 +65,6 @@ class Users extends \yii\db\ActiveRecord
             'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
-            'restaurant_id' => 'Restaurant ID',
         ];
     }
 

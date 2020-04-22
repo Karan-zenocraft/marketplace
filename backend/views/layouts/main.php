@@ -37,7 +37,7 @@ CommonAppAsset::register($this);
                     <div class="nav-collapse">
                         <ul class="nav pull-right">
                             <li class="dropdown">
-                                <a href="javascript:void(0);" role="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i> <?=Yii::$app->user->identity->user_name;?>  <i class="caret"></i>
+                                <a href="javascript:void(0);" role="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i> <?=Yii::$app->user->identity->first_name." ".Yii::$app->user->identity->last_name;?>  <i class="caret"></i>
 
                                 </a>
                                 <ul class="dropdown-menu">

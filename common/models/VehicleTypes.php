@@ -2,9 +2,9 @@
 
 namespace common\models;
 
-class SentNotes extends \common\models\base\SentNotesBase
+class VehicleTypes extends \common\models\base\VehicleTypesBase
 {
-    public function beforeSave($insert)
+     public function beforeSave($insert)
     {
         if ($this->isNewRecord) {
             $this->setAttribute('created_at', date('Y-m-d H:i:s'));

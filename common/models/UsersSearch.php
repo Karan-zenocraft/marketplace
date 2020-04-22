@@ -19,7 +19,7 @@ class UsersSearch extends Users
     {
         return [
             [['id', 'role_id', 'phone', 'badge_count', 'status'], 'integer'],
-            [['user_name', 'email', 'password', 'photo', 'verification_code', 'is_code_verified', 'password_reset_token', 'auth_token', 'created_at', 'updated_at'], 'safe'],
+            [['first_name','last_name', 'email', 'password', 'photo', 'verification_code', 'is_code_verified', 'password_reset_token', 'auth_token', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -68,12 +68,13 @@ class UsersSearch extends Users
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'user_name', $this->user_name])
+        $query->andFilterWhere(['like', 'first_name', $this->first_name])
+            ->andFilterWhere(['like', 'last_name', $this->last_name])
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'password', $this->password])
             ->andFilterWhere(['like', 'photo', $this->photo])
-            ->andFilterWhere(['like', 'verification_code', $this->verification_code])
-            ->andFilterWhere(['like', 'is_code_verified', $this->is_code_verified])
+            ->andFilterWhere(['like', 'email_verification_code', $this->email_verification_code])
+            ->andFilterWhere(['like', 'is_email_code_verified', $this->is_email_code_verified])
             ->andFilterWhere(['like', 'password_reset_token', $this->password_reset_token])
             ->andFilterWhere(['like', 'auth_token', $this->auth_token]);
 

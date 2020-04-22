@@ -4,14 +4,14 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Users */
+/* @var $model common\models\PeakTimes */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
+$this->title = $model->name;
+$this->params['breadcrumbs'][] = ['label' => 'Peak Times', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-<div class="users-view">
+<div class="peak-times-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -30,22 +30,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'role_id',
-            'first_name',
-            'email:email',
-            'password',
-            'phone',
-            'photo',
-            'verification_code',
-            'is_code_verified',
-            'password_reset_token:ntext',
-            'auth_token',
-            'badge_count',
-            'login_type',
-            'status',
+            'name',
+            'start_time',
+            'end_time',
             'created_at',
             'updated_at',
-            'restaurant_id',
         ],
     ]) ?>
 
