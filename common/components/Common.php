@@ -1122,7 +1122,7 @@ class Common
     public static function get_user_name($id)
     {
         $omUsers = Users::find()->where(['id' => $id])->one();
-        return !empty($omUsers) ? $omUsers->name : "-";
+        return !empty($omUsers) ? $omUsers->first_name." ".$omUsers->last_name : "-";
     }
     //THIS FUNCTION RETURNS USER ROLE OF USER//
     public static function get_user_role($id, $flag)

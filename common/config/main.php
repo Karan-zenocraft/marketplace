@@ -13,7 +13,7 @@ return [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=localhost;dbname=marvelapp',
             'username' => 'root',
-            'password' => 'rutusha@123',
+            'password' => 'Zenocraft@123',
             'charset' => 'utf8',
         ],
         'assetManager' => [

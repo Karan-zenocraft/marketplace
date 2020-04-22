@@ -37,3 +37,12 @@ Yii::setAlias('user_add_message', 'user has been added successfully !');
 Yii::setAlias('user_update_message', 'user has been updated successfully !');
 Yii::setAlias('user_delete_message', 'user has been deleted successfully !');
 //END:  Restaurant message
+
+Yii::setAlias('vehicle_type_create', 'Vehicle Type has been added successfully !');
+Yii::setAlias('vehicle_type_update', 'Vehicle Type has been updated successfully !');
+Yii::setAlias('vehicle_type_delete', 'Vehicle Type has been deleted successfully !');
+
+
+Yii::setAlias('peak_times_create', 'Peak Times has been added successfully !');
+Yii::setAlias('peak_times_update', 'Peak Times has been updated successfully !');
+Yii::setAlias('peak_times_delete', 'Peak Times has been deleted successfully !');
