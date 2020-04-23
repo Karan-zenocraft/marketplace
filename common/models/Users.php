@@ -50,6 +50,7 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             [['role_id', 'first_name','last_name', 'email', 'password','phone'], 'required'],
+             [['role_id', 'first_name','last_name', 'email', 'password','phone'],'filter', 'filter' => 'trim'],
             [['phone'], 'integer'],
               [['email'], 'email'],
             ['email', 'validateEmail'],

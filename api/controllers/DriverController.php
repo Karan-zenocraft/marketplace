@@ -46,7 +46,7 @@ class DriverController extends \yii\base\Controller
 
         if (($model = Users::findOne(['email' => $requestParam['email'], 'password' => md5($requestParam['password'])])) !== null) {
 
-            if (($modell = Users::findOne(['email' => $requestParam['email'], 'password' => md5($requestParam['password']), 'role_id' => [Yii::$app->params['userroles']['super_admin'], Yii::$app->params['userroles']['admin'], Yii::$app->params['userroles']['patient']]])) !== null) {
+            if (($modell = Users::findOne(['email' => $requestParam['email'], 'password' => md5($requestParam['password']), 'role_id' => [Yii::$app->params['userroles']['super_admin'], Yii::$app->params['userroles']['admin'], Yii::$app->params['userroles']['passanger']]])) !== null) {
                 $ssMessage = ' You are not authorize to login.';
                 $amResponse = Common::errorResponse($ssMessage);
             } else if (($model1 = Users::findOne(['email' => $requestParam['email'], 'password' => md5($requestParam['password']), 'status' => "0"])) !== null) {
@@ -67,16 +67,21 @@ class DriverController extends \yii\base\Controller
                 $model->auth_token = $ssAuthToken;
                 $model->save(false);
 
-                $ssMessage = 'successfully login.';
-                $amReponseParam['email'] = $model->email;
-                $amReponseParam['id'] = $model->id;
-                $amReponseParam['user_name'] = $model->user_name;
-                $amReponseParam['phone'] = !empty($model->phone) ? $model->phone : "";
-                $amReponseParam['device_token'] = $device_model->device_tocken;
-                $amReponseParam['device_type'] = Yii::$app->params['device_type_value'][$device_model->type];
-                $amReponseParam['is_code_verified'] = !empty($model->is_code_verified) && ($model->is_code_verified > 0) ? $model->is_code_verified : 0;
-                $amReponseParam['auth_token'] = $ssAuthToken;
-                $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "uploads/no_image.png";
+                 $ssMessage = 'successfully login.';
+                 $amReponseParam['email'] = $model->email;
+                 $amReponseParam['id'] = $model->id;
+                 $amReponseParam['first_name'] = $model->first_name;
+                 $amReponseParam['last_name'] = $model->last_name;
+                 $amReponseParam['phone'] = $model->phone;
+                 $amReponseParam['role'] = $model->role_id;
+            //$amReponseParam['phone'] = $model->phone;
+                 $amReponseParam['email_verification_code'] = $model->email_verification_code;
+                 $amReponseParam['is_phone_code_verified'] = $model->is_phone_code_verified;
+                 $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "uploads/no_image.png";
+                 $amReponseParam['device_token'] = $device_model->device_tocken;
+                 $amReponseParam['device_type'] = Yii::$app->params['device_type_value'][$device_model->type];
+            /*   $amReponseParam['gcm_registration_id'] = !empty($device_model->gcm_id) ? $device_model->gcm_id : "";*/
+                 $amReponseParam['auth_token'] = $ssAuthToken;
 
                 $amResponse = Common::successResponse($ssMessage, array_map('strval', $amReponseParam));
             }

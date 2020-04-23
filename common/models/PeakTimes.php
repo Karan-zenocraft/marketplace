@@ -13,4 +13,14 @@ class PeakTimes extends \common\models\base\PeakTimesBase
 
         return parent::beforeSave($insert);
     }
+
+    public function rules()
+{
+        return [
+            [['name', 'start_time', 'end_time'], 'required'],
+            [['name', 'start_time', 'end_time'],'filter', 'filter' => 'trim'],
+            [['start_time', 'end_time', 'created_at', 'updated_at'], 'safe'],
+            [['name'], 'string', 'max' => 255],
+        ];
+}
 }
