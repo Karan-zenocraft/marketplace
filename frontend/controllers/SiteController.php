@@ -248,9 +248,9 @@ class SiteController extends Controller
     {
         $email = base64_decode($e);
         $verificationcode = base64_decode($verify);
-        $user = Users::findOne(['email' => $email, 'verification_code' => $verificationcode]);
-        if (!empty($user) && ($user->is_code_verified == "0")) {
-            $user->is_code_verified = "1";
+        $user = Users::findOne(['email' => $email, 'email_verification_code' => $verificationcode]);
+        if (!empty($user) && ($user->is_email_code_verified == "0")) {
+            $user->is_email_code_verified = "1";
             $user->save(false);
             Yii::$app->getSession()->setFlash('success', Yii::getAlias('Your Email is successfully verified.Please login in website.'));
             return $this->redirect(\Yii::$app->urlManager->createUrl(['site/index']));

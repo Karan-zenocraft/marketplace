@@ -42,7 +42,6 @@ use yii\widgets\ActiveForm;
 <div class="span3 style_input_width">
     <?php echo $form->field($model, 'phone') ?>
 </div>
-<div class="span3 style_input_width">
     <div class="span3 style_input_width"><?=$form->field($model, 'status')->dropDownList(Yii::$app->params['user_status']);?></div>
 </div>
 </div>

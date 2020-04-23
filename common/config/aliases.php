@@ -46,3 +46,7 @@ Yii::setAlias('vehicle_type_delete', 'Vehicle Type has been deleted successfully
 Yii::setAlias('peak_times_create', 'Peak Times has been added successfully !');
 Yii::setAlias('peak_times_update', 'Peak Times has been updated successfully !');
 Yii::setAlias('peak_times_delete', 'Peak Times has been deleted successfully !');
+
+Yii::setAlias('vehicle_type_rates_create', 'Rates has been added successfully !');
+Yii::setAlias('vehicle_type_rates_update', 'Rates has been updated successfully !');
+Yii::setAlias('vehicle_type_rates_delete', 'Rates has been deleted successfully !');
