@@ -12,8 +12,8 @@ return [
     'userroles' => [
         'super_admin' => '1',
         'admin' => '2',
-        'doctor' => '3',
-        'patient' => '4',
+        'driver' => '3',
+        'passanger' => '4',
     ],
     'user_status' => array('1' => 'Active', '0' => 'In-Active'),
     'user_status_value' => array('active' => '1', 'in_active' => '0'),

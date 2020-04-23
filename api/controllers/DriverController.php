@@ -115,6 +115,10 @@ class DriverController extends \yii\base\Controller
 
         $requestParam = $amData['request_param'];
         $requestFileparam = $amData['file_param'];
+        if(empty($requestFileparam['photo']['name'])){
+            $amResponse = Common::errorResponse("Please upload profile picture");
+            Common::encodeResponseJSON($amResponse);
+        }
             if (!empty(Users::findOne(["email" => $requestParam['email']]))) {
                 $amResponse = Common::errorResponse("This Email id is already registered.");
                 Common::encodeResponseJSON($amResponse);
