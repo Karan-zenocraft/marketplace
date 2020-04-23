@@ -4,12 +4,12 @@ namespace common\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\PeakTimes;
+use common\models\VehicleTypeRates;
 
 /**
- * PeakTimesSearch represents the model behind the search form of `common\models\PeakTimes`.
+ * VehicleTypeRatesSearch represents the model behind the search form of `common\models\VehicleTypeRates`.
  */
-class PeakTimesSearch extends PeakTimes
+class VehicleTypeRatesSearch extends VehicleTypeRates
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class PeakTimesSearch extends PeakTimes
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['name', 'start_time', 'end_time', 'created_at', 'updated_at'], 'safe'],
+            [['id', 'vehicle_type_id', 'vehicle_charge_id', 'normal_charge', 'peak_time_charge'], 'integer'],
+            [['created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class PeakTimesSearch extends PeakTimes
      */
     public function search($params)
     {
-        $query = PeakTimes::find();
+        $query = VehicleTypeRates::find();
 
         // add conditions that should always apply here
 
@@ -59,19 +59,14 @@ class PeakTimesSearch extends PeakTimes
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-           /* 'start_time' => $this->start_time,
-            'end_time' => $this->end_time,*/
+            'vehicle_type_id' => $this->vehicle_type_id,
+            'vehicle_charge_id' => $this->vehicle_charge_id,
+            'normal_charge' => $this->normal_charge,
+            'peak_time_charge' => $this->peak_time_charge,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name]);
-        if(!empty($params) && !empty($params['PeakTimesSearch']['start_time'])){
-            $query->andFilterWhere(['start_time'=>date("H:i:s",strtotime($params['PeakTimesSearch']['start_time']))]);
-        }
-        if(!empty($params) && !empty($params['PeakTimesSearch']['end_time'])){
-            $query->andFilterWhere(['end_time'=>date("H:i:s",strtotime($params['PeakTimesSearch']['end_time']))]);
-        }
         return $dataProvider;
     }
 }

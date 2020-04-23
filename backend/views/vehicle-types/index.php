@@ -74,11 +74,18 @@ vehicle-typess-serach common_search">
             'class' => 'yii\grid\ActionColumn',
             'headerOptions' => ["style" => "width:40%;"],
             'contentOptions' => ["style" => "width:40%;"],
-            'template' => '{update}{delete}',
+            'template' => '{update}{add_vehicle_rates}{delete}',
             'buttons' => [
                 'update' => function ($url, $model) {
                     $flag = 1;
                     return Common::template_update_button($url, $model, $flag);
+                },
+                'add_vehicle_rates' => function ($url, $model) {
+                    $title = "Add Vehicle Rates";
+                    $flag = 5;
+                    $url = Yii::$app->urlManager->createUrl(['vehicle-types/add-rates', 'type_id' => $model->id]);
+                    return Common::template_update_permission_button($url, $model,$flag);
+
                 },
                 'delete' => function ($url, $model) {
                     $flag = 1;

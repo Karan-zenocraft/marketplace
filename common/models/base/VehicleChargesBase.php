@@ -9,6 +9,7 @@ use common\models\VehicleTypeRates;
  * This is the model class for table "vehicle_charges".
 *
     * @property integer $id
+    * @property string $slug
     * @property string $label
     * @property string $created_at
     * @property string $updated_at
@@ -31,9 +32,9 @@ return 'vehicle_charges';
 public function rules()
 {
         return [
-            [['label', 'created_at', 'updated_at'], 'required'],
+            [['label'], 'required'],
             [['created_at', 'updated_at'], 'safe'],
-            [['label'], 'string', 'max' => 255],
+            [['slug', 'label'], 'string', 'max' => 255],
         ];
 }
 
@@ -44,6 +45,7 @@ public function attributeLabels()
 {
 return [
     'id' => 'ID',
+    'slug' => 'Slug',
     'label' => 'Label',
     'created_at' => 'Created At',
     'updated_at' => 'Updated At',

@@ -286,6 +286,13 @@ class Common
                 //'target' => '_blanck'
             ]);
         }
+         if ($flag == 5) {
+            return Html::a('<i class="icon-plus-sign icon-white"></i>', $url, [
+                'title' => Yii::t('yii', $title),
+                'class' => 'btn btn-primary btn-small',
+                //'target' => '_blanck'
+            ]);
+        }
     }
     /*
      * Set designing for view tasks button
@@ -318,8 +325,8 @@ class Common
     public static function template_update_permission_button($url, $model, $flag)
     {
 
-        return Html::a('<i class="icon-time icon-white"></i> ', $url, [
-            'title' => Yii::t('yii', "Edit Restaurant's working Hours"),
+        return Html::a('<i class="icon-plus icon-white"></i> ', $url, [
+            'title' => Yii::t('yii', "Add Vehicle Rates"),
             'class' => 'btn btn-primary btn-small colorbox_popup',
             'onClick' => 'javascript:openColorBox(1090,820);',
         ]);

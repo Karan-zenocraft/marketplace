@@ -12,7 +12,9 @@ body {
     }
 }
 
-
+.form-control{
+    height: auto !important;
+}
 /** Login Page **/
 #login {
     padding-top: 40px;

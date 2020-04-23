@@ -51,8 +51,8 @@ public function attributeLabels()
 {
 return [
     'id' => 'ID',
-    'vehicle_type_id' => 'Vehicle Type ID',
-    'vehicle_charge_id' => 'Vehicle Charge ID',
+    'vehicle_type_id' => 'Vehicle Type',
+    'vehicle_charge_id' => 'Vehicle Charge',
     'normal_charge' => 'Normal Charge',
     'peak_time_charge' => 'Peak Time Charge',
     'created_at' => 'Created At',
