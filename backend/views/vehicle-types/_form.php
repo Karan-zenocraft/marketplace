@@ -25,10 +25,6 @@ use yii\widgets\ActiveForm;
 </div>
 </div>
 <div class="row">
-                
-     <div class="span3 style_input_width">
-    <?= $form->field($model, 'seat_count')->textInput() ?>
-</div>
      <div class="span3 style_input_width">
     <?=$form->field($model, 'status')->dropDownList(Yii::$app->params['user_status']);?></div>
 </div>

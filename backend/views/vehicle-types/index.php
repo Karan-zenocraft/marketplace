@@ -56,7 +56,6 @@ vehicle-typess-serach common_search">
           //  'id',
             'title',
             'description',
-            'seat_count',
            [
             'attribute' => 'status',
             'filterOptions' => ["style" => "width:13%;"],

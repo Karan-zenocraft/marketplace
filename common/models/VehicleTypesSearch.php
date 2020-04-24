@@ -17,7 +17,7 @@ class VehicleTypesSearch extends VehicleTypes
     public function rules()
     {
         return [
-            [['id', 'seat_count'], 'integer'],
+            [['id'], 'integer'],
             [['title', 'description', 'status', 'created_at', 'updated_at'], 'safe'],
         ];
     }
@@ -59,7 +59,6 @@ class VehicleTypesSearch extends VehicleTypes
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'seat_count' => $this->seat_count,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);

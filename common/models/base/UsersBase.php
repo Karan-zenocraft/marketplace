@@ -3,6 +3,10 @@
 namespace common\models;
 
 use Yii;
+use common\models\VehicleDetails;
+use common\models\DeviceDetails;
+use common\models\UserRoles;
+
 
 /**
  * This is the model class for table "users".
@@ -73,8 +77,17 @@ class Users extends \yii\db\ActiveRecord
      */
     public function getRole()
     {
-        return $this->hasOne(UserRole::className(), ['id' => 'role_id']);
+        return $this->hasOne(UserRoles::className(), ['id' => 'role_id']);
     }
+      public function getVehicleDetails()
+    {
+    return $this->hasMany(VehicleDetails::className(), ['user_id' => 'id']);
+    }
+     public function getDeviceDetails()
+    {
+    return $this->hasMany(DeviceDetails::className(), ['user_id' => 'id']);
+    }
+
 
     /**
      * {@inheritdoc}

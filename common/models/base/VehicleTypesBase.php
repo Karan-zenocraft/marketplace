@@ -3,6 +3,7 @@
 namespace common\models\base;
 
 use Yii;
+use common\models\VehicleDetails;
 use common\models\VehicleTypeRates;
 
 /**
@@ -11,11 +12,13 @@ use common\models\VehicleTypeRates;
     * @property integer $id
     * @property string $title
     * @property string $description
-    * @property integer $seat_count
     * @property string $status
     * @property string $created_at
     * @property string $updated_at
-*/
+    *
+            * @property VehicleDetails[] $vehicleDetails
+            * @property VehicleTypeRates[] $vehicleTypeRates
+    */
 class VehicleTypesBase extends \yii\db\ActiveRecord
 {
 /**
@@ -32,10 +35,9 @@ return 'vehicle_types';
 public function rules()
 {
         return [
-            [['title', 'description', 'seat_count'], 'required'],
-            [['seat_count'], 'integer'],
-          //  [['status'], 'string'],
-            [['created_at', 'updated_at','status'], 'safe'],
+            [['title', 'description', 'created_at', 'updated_at'], 'required'],
+            [['status'], 'string'],
+            [['created_at', 'updated_at'], 'safe'],
             [['title', 'description'], 'string', 'max' => 255],
         ];
 }
@@ -49,16 +51,25 @@ return [
     'id' => 'ID',
     'title' => 'Title',
     'description' => 'Description',
-    'seat_count' => 'Seat Count',
     'status' => 'Status',
     'created_at' => 'Created At',
     'updated_at' => 'Updated At',
 ];
 }
-public function getVehicleTypeRates() 
-   { 
-   return $this->hasMany(VehicleTypeRates::className(), ['vehicle_type_id' => 'id']); 
-   } 
-   
-}
 
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getVehicleDetails()
+    {
+    return $this->hasMany(VehicleDetails::className(), ['vehicle_type_id' => 'id']);
+    }
+
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getVehicleTypeRates()
+    {
+    return $this->hasMany(VehicleTypeRates::className(), ['vehicle_type_id' => 'id']);
+    }
+}

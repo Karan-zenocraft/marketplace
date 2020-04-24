@@ -1615,6 +1615,11 @@ class Common
         $amResponse = ['success' => "200", 'message' => $ssSuccessMessage, 'data' => $amReponseParam];
         return $amResponse;
     }
+      public static function successResponseLogin($ssSuccessMessage,$amReponseParam,$user_id,$auth_token)
+    {
+        $amResponse = ['success' => "200", 'message' => $ssSuccessMessage,"user_id"=>$user_id,"auth_token"=>$auth_token, 'data' => $amReponseParam];
+        return $amResponse;
+    }
     public static function successResponseBlank($ssSuccessMessage, $amReponseParam = [])
     {
         $amResponse = ['success' => "0", 'message' => $ssSuccessMessage, 'data' => $amReponseParam];

@@ -7,6 +7,7 @@ use common\models\DeviceDetails;
 use common\models\EmailFormat;
 use common\models\Users;
 use Yii;
+use common\models\VehicleDetails;
 
 /* USE COMMON MODELS */
 use yii\web\Controller;
@@ -66,8 +67,12 @@ class DriverController extends \yii\base\Controller
                 $ssAuthToken = Common::generateToken($model->id);
                 $model->auth_token = $ssAuthToken;
                 $model->save(false);
-
-                 $ssMessage = 'successfully login.';
+                $vehicleDetails = VehicleDetails::find()->where(['user_id'=>$model->id])->one();
+                if(empty($vehicleDetails)){
+                    $ssMessage = 'Successfully login.Please complete step 3 for Registration for adding vehicel details';
+                }else{
+                    $ssMessage = "successfully Login.";
+                }
                  $amReponseParam['email'] = $model->email;
                  $amReponseParam['id'] = $model->id;
                  $amReponseParam['first_name'] = $model->first_name;
@@ -83,7 +88,7 @@ class DriverController extends \yii\base\Controller
             /*   $amReponseParam['gcm_registration_id'] = !empty($device_model->gcm_id) ? $device_model->gcm_id : "";*/
                  $amReponseParam['auth_token'] = $ssAuthToken;
 
-                $amResponse = Common::successResponse($ssMessage, array_map('strval', $amReponseParam));
+                $amResponse = Common::successResponseLogin($ssMessage, array_map('strval', $amReponseParam),$model->id,$ssAuthToken);
             }
         } else {
             $ssMessage = 'Invalid email OR password.';
