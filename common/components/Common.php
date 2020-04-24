@@ -1495,7 +1495,7 @@ class Common
         } else {
             $amDataAll = $amData; // self::arrayFlatten($amData);
             foreach ($amRequiredParams as $value) {
-                if (!isset($amDataAll[$value])) {
+                if (!isset($amDataAll[$value]) || empty($amDataAll[$value])) {
                     $amError['error'] = $value . " can't be blank";
                     return $amError;
                 }
@@ -1505,6 +1505,23 @@ class Common
         return $amError;
     }
 
+    public static function checkRequiredFileParams($amData, $amRequiredFileParams)
+    {
+        $amError = array();
+        if (empty($amData)) {
+            $amError['error'] = 'Invalid request parameters';
+        } else {
+            $amDataAll = $amData; // self::arrayFlatten($amData);
+            foreach ($amRequiredFileParams as $value) {
+                if (!isset($amDataAll[$value]['name']) || empty($amDataAll[$value]['name'])) {
+                    $amError['error'] = $value . " can't be blank";
+                    return $amError;
+                }
+            }
+        }
+
+        return $amError;
+    }
     public static function errorResponse($ssErrorMessage)
     {
         $amResponse = array('success' => "0", 'message' => $ssErrorMessage);
@@ -1939,5 +1956,9 @@ class Common
         $string = preg_replace('/[()-]/', '', $string); // Removes special chars.
         return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.*/
         return preg_replace('/[^A-Za-z0-9]/', "", $string);
+    }
+    public static function get_driver_image_path($img){
+          $path = !empty($img) && file_exists(Yii::getAlias('@root') . '/' . "uploads/driver_images/" . $img) ? Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $img : Yii::$app->params['root_url'] . '/' . "uploads/no_image.png";
+          return $path;
     }
 }

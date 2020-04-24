@@ -8,6 +8,7 @@ use common\models\EmailFormat;
 use common\models\Users;
 use Yii;
 use common\models\VehicleDetails;
+use common\models\VehicleTypes;
 
 /* USE COMMON MODELS */
 use yii\web\Controller;
@@ -214,6 +215,92 @@ class DriverController extends \yii\base\Controller
             $amReponseParam['auth_token'] = $ssAuthToken;
 
             $amResponse = Common::successResponse($ssMessage, array_map('strval', $amReponseParam));
+        }
+        // FOR ENCODE RESPONSE INTO JSON //
+        Common::encodeResponseJSON($amResponse);
+    }
+
+     public function actionAddVehicleDetails()
+    {
+
+        $amData = Common::checkRequestType();
+
+        $amResponse = $amReponseParam = [];
+
+        // Check required validation for request parameter.
+        $amRequiredParams = array('user_id','name','vehicle_type_id','seat_capacity','vehicle_registration_no');
+        $amRequiredFileParams = array('vehicle_image_front','vehicle_image_back','driver_license_image_front','driver_license_image_back','vehicle_registration_image_front','vehicle_registration_image_back');
+        $amParamsResult = Common::checkRequiredParams($amData['request_param'], $amRequiredParams);
+         $amParamsResultFiles = Common::checkRequiredFileParams($amData['file_param'], $amRequiredFileParams);
+
+        // If any getting error in request paramter then set error message.
+        if (!empty($amParamsResult['error'])){
+            $amResponse = Common::errorResponse($amParamsResult['error']);
+            Common::encodeResponseJSON($amResponse);
+        }
+        if (!empty($amParamsResultFiles['error'])){
+            $amResponse = Common::errorResponse($amParamsResultFiles['error']);
+            Common::encodeResponseJSON($amResponse);
+        }
+        
+        $requestParam = $amData['request_param'];
+        //p($requestParam,0);
+        $requestFileparam = $amData['file_param'];
+       // p($requestFileparam);
+        // If any getting error in request paramter
+        if(empty($requestFileparam['vehicle_image_front']) || empty($requestFileparam['vehicle_image_back']) || empty($requestFileparam['driver_license_image_front']) || empty($requestFileparam['driver_license_image_back']) || empty($requestFileparam['vehicle_registration_image_front']) || empty($requestFileparam['vehicle_registration_image_back'])){
+             $ssMessage = 'Please upload images';
+                $amResponse = Common::errorResponse($ssMessage);
+                Common::encodeResponseJSON($amResponse);
+        }
+        //Check User Status//
+        Common::matchUserStatus($requestParam['user_id']);
+        //VERIFY AUTH TOKEN
+        $authToken = Common::get_header('auth_token');
+        Common::checkAuthentication($authToken, $requestParam['user_id']);
+        $oModelUser = Users::findOne($requestParam['user_id']);
+        if (!empty($oModelUser)) {
+            $vehicleDetailsModel = VehicleDetails::find()->where(['user_id'=>$requestParam['user_id']])->one();
+            if(!empty($vehicleDetailsModel)){
+                $ssMessage = 'Your vehicle details already added.';
+                $amResponse = Common::errorResponse($ssMessage);
+                Common::encodeResponseJSON($amResponse);
+            }else{
+                $checkVehicleType = VehicleTypes::findOne($requestParam['vehicle_type_id']);
+                if(!empty($checkVehicleType)){
+                $vehicleDetails = new VehicleDetails;
+                $vehicleDetails->user_id = $requestParam['user_id'];
+                $vehicleDetails->name = $requestParam['name'];
+                $vehicleDetails->vehicle_type_id = $requestParam['vehicle_type_id'];
+                $vehicleDetails->seat_capacity = $requestParam['seat_capacity'];
+                $vehicleDetails->vehicle_registration_no = $requestParam['vehicle_registration_no'];
+                $vehicleDetails->status = "1";
+                foreach ($requestFileparam as $key => $value) {
+                    $vehicleDetails->$key = UploadedFile::getInstanceByName($key);
+                    $Modifier = md5(($vehicleDetails->$key));
+                    $OriginalModifier = $Modifier . rand(11111, 99999);
+                    $Extension = $vehicleDetails->$key->extension;
+                    $vehicleDetails->$key->saveAs(__DIR__ . "../../../uploads/driver_images/" . $OriginalModifier . '.' . $vehicleDetails->$key->extension);
+                    $vehicleDetails->$key = $OriginalModifier . '.' . $Extension;
+                }
+                $vehicleDetails->save(false);
+                $vehicleDetails->vehicle_image_front = Common::get_driver_image_path($vehicleDetails->vehicle_image_front);
+                $vehicleDetails->vehicle_image_back = Common::get_driver_image_path($vehicleDetails->vehicle_image_back);
+                $vehicleDetails->driver_license_image_front = Common::get_driver_image_path($vehicleDetails->driver_license_image_front);
+                $vehicleDetails->driver_license_image_back = Common::get_driver_image_path($vehicleDetails->driver_license_image_back);
+                $vehicleDetails->vehicle_registration_image_front = Common::get_driver_image_path($vehicleDetails->vehicle_registration_image_front);
+                $vehicleDetails->vehicle_registration_image_back = Common::get_driver_image_path($vehicleDetails->vehicle_registration_image_back);
+                $amReponseParam = $vehicleDetails;
+                $ssMessage = "Your Vehicle Details added successfully.";
+                $amResponse = Common::successResponse($ssMessage,$amReponseParam);
+            }else{
+                $ssMessage = 'Invalid vehicle type.';
+                $amResponse = Common::errorResponse($ssMessage);
+            }
+            }
+        } else {
+            $ssMessage = 'Invalid User.';
+            $amResponse = Common::errorResponse($ssMessage);
         }
         // FOR ENCODE RESPONSE INTO JSON //
         Common::encodeResponseJSON($amResponse);
