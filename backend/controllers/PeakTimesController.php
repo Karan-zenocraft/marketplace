@@ -10,7 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use backend\components\AdminCoreController;
 
-
+ 
 /**
  * PeakTimesController implements the CRUD actions for PeakTimes model.
  */
