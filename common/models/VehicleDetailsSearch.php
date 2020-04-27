@@ -40,7 +40,7 @@ class VehicleDetailsSearch extends VehicleDetails
      */
     public function search($params)
     {
-        $query = VehicleDetails::find();
+        $query = VehicleDetails::find()->where(['user_id'=>$params['user_id']]);
 
         // add conditions that should always apply here
 

@@ -54,7 +54,10 @@ class DriverController extends \yii\base\Controller
             } else if (($model1 = Users::findOne(['email' => $requestParam['email'], 'password' => md5($requestParam['password']), 'status' => "0"])) !== null) {
                 $ssMessage = ' User has been deactivated. Please contact admin.';
                 $amResponse = Common::errorResponse($ssMessage);
-            } else {
+            } else if (($model2 = Users::findOne(['email' => $requestParam['email'], 'password' => md5($requestParam['password']), 'is_email_code_verified' => "0"])) !== null) {
+                $ssMessage = ' Your Email is not verified.Please check your inbox to verify email';
+                $amResponse = Common::errorResponse($ssMessage);
+            }else {
                 if (($device_model = DeviceDetails::findOne(['type' => $requestParam['device_type'], 'user_id' => $model->id])) === null) {
                     $device_model = new DeviceDetails();
                 }

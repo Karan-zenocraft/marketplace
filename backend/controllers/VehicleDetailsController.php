@@ -17,7 +17,7 @@ class VehicleDetailsController extends AdminCoreController
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
+   /* public function behaviors()
     {
         return [
             'verbs' => [
@@ -27,14 +27,15 @@ class VehicleDetailsController extends AdminCoreController
                 ],
             ],
         ];
-    }
+    }*/
 
     /**
      * Lists all VehicleDetails models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($user_id)
     {
+        $this->layout = 'popup';
         $searchModel = new VehicleDetailsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 

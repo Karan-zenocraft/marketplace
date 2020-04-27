@@ -110,11 +110,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'yii\grid\ActionColumn',
             'headerOptions' => ["style" => "width:40%;"],
             'contentOptions' => ["style" => "width:40%;"],
-            'template' => '{update}{delete}',
+            'template' => '{update}{manage_vehicle_details}{delete}',
             'buttons' => [
                 'update' => function ($url, $model) {
                     $flag = 1;
                     return Common::template_update_button($url, $model, $flag);
+                },
+                'manage_vehicle_details' => function ($url, $model) {
+                    $title = "Manage Vehicle Details";
+                    $flag = 4;
+                    $url = Yii::$app->urlManager->createUrl(['vehicle-details/index', 'user_id' => $model->id]);
+                    return ($model->role_id == Yii::$app->params['userroles']['driver']) ? Common::template_view_vehicle_details($url, $model, $title, $flag) : "";
+
                 },
                 'delete' => function ($url, $model) {
                     $flag = 1;

@@ -293,6 +293,13 @@ class Common
                 //'target' => '_blanck'
             ]);
         }
+           if ($flag == 6) {
+            return Html::a('<i class="icon-plus-sign icon-white"></i>', $url, [
+                'title' => Yii::t('yii', $title),
+                'class' => 'btn btn-primary btn-small',
+                //'target' => '_blanck'
+            ]);
+        }
     }
     /*
      * Set designing for view tasks button
@@ -1960,5 +1967,15 @@ class Common
     public static function get_driver_image_path($img){
           $path = !empty($img) && file_exists(Yii::getAlias('@root') . '/' . "uploads/driver_images/" . $img) ? Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $img : Yii::$app->params['root_url'] . '/' . "uploads/no_image.png";
           return $path;
+    }
+    public static function template_view_vehicle_details($url, $model, $flag)
+    {
+
+        return Html::a('<i class="icon-list icon-white"></i> ', $url, [
+            'title' => Yii::t('yii', "View Vehicle Details"),
+            'class' => 'btn btn-primary btn-small colorbox_popup',
+            'onClick' => 'javascript:openColorBox(700,300);',
+        ]);
+
     }
 }
