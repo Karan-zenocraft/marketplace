@@ -71,9 +71,12 @@ class DriverController extends \yii\base\Controller
                 $vehicleDetails = VehicleDetails::find()->where(['user_id'=>$model->id])->one();
                 if(empty($vehicleDetails)){
                     $ssMessage = 'Successfully login.Please complete step 3 for Registration for adding vehicel details';
+                    $step3 = "0";
                 }else{
                     $ssMessage = "successfully Login.";
+                    $step3 = "1";
                 }
+                 $amReponseParam['step3'] = $step3;
                  $amReponseParam['email'] = $model->email;
                  $amReponseParam['id'] = $model->id;
                  $amReponseParam['first_name'] = $model->first_name;
@@ -197,7 +200,13 @@ class DriverController extends \yii\base\Controller
 
                 }
             }
-
+            $vehicleDetails = VehicleDetails::find()->where(['user_id'=>$model->id])->one();
+                if(empty($vehicleDetails)){
+                    $step3 = "0";
+                }else{
+                    $step3 = "1";
+                }
+            $amReponseParam['step3'] = $step3;
             $ssMessage = 'You are successfully Registered.';
             $amReponseParam['email'] = $model->email;
             $amReponseParam['id'] = $model->id;
