@@ -162,6 +162,22 @@ class UsersController extends AdminCoreController
         Yii::$app->session->setFlash('success', Yii::getAlias('@user_delete_message'));
         return $this->redirect(['index']);
     }
+       public function actionApproveDriver($user_id)
+    {
+        $this->layout = 'popup';
+        $userModel = Users::find()->where(['id' => $user_id])->one();
+        if (!empty(Yii::$app->request->post()) && !empty($userModel)) {
+            $postData = Yii::$app->request->post();
+            $userModel->is_approve = $postData['Users']['is_approve'];
+            $userModel->save(false);
+            Yii::$app->session->setFlash('success', Yii::getAlias('@user_update_message'));
+            return Common::closeColorBox();
+
+        }
+        return $this->render('approve_driver', [
+            'userModel' => $userModel,
+        ]);
+    }
 
     /**
      * Finds the Users model based on its primary key value.

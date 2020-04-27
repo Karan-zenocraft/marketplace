@@ -1974,7 +1974,17 @@ class Common
         return Html::a('<i class="icon-list icon-white"></i> ', $url, [
             'title' => Yii::t('yii', "View Vehicle Details"),
             'class' => 'btn btn-primary btn-small colorbox_popup',
-            'onClick' => 'javascript:openColorBox(700,300);',
+            'onClick' => 'javascript:openColorBox(1100,500);',
+        ]);
+
+    }
+    public static function template_approve_driver($url, $model, $flag)
+    {
+
+        return Html::a('<i class="icon-edit icon-white"></i> ', $url, [
+            'title' => Yii::t('yii', "View Vehicle Details"),
+            'class' => 'btn btn-primary btn-small colorbox_popup',
+            'onClick' => 'javascript:openColorBox(400,380);',
         ]);
 
     }

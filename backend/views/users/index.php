@@ -47,8 +47,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
     <div class="block-content">
         <div class="goodtable">
-
-    <?php Pjax::begin();?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?=GridView::widget([
@@ -110,17 +108,25 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'yii\grid\ActionColumn',
             'headerOptions' => ["style" => "width:40%;"],
             'contentOptions' => ["style" => "width:40%;"],
-            'template' => '{update}{manage_vehicle_details}{delete}',
+            'template' => '{update}{manage_vehicle_details}{approve_driver}{delete}',
             'buttons' => [
                 'update' => function ($url, $model) {
                     $flag = 1;
                     return Common::template_update_button($url, $model, $flag);
                 },
-                'manage_vehicle_details' => function ($url, $model) {
-                    $title = "Manage Vehicle Details";
+
+                 'manage_vehicle_details' => function ($url, $model) {
+                    $title = "Add Vehicle Rates";
                     $flag = 4;
-                    $url = Yii::$app->urlManager->createUrl(['vehicle-details/index', 'user_id' => $model->id]);
-                    return ($model->role_id == Yii::$app->params['userroles']['driver']) ? Common::template_view_vehicle_details($url, $model, $title, $flag) : "";
+                       $url = Yii::$app->urlManager->createUrl(['vehicle-details/index', 'user_id' => $model->id]);
+                    return ($model->role_id == Yii::$app->params['userroles']['driver']) ? Common::template_view_vehicle_details($url, $model,$flag) : "";
+
+                },
+                  'approve_driver' => function ($url, $model) {
+                    $title = "Approve Driver";
+                    $flag = 5;
+                    $url = Yii::$app->urlManager->createUrl(['users/approve-driver', 'user_id' => $model->id]);
+                    return ($model->role_id == Yii::$app->params['userroles']['driver']) ? Common::template_approve_driver($url, $model, $title, $flag) : "";
 
                 },
                 'delete' => function ($url, $model) {
@@ -133,8 +139,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ],
 ]);?>
-
-    <?php Pjax::end();?>
         </div>
     </div>
 </div>
