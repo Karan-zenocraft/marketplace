@@ -1,5 +1,6 @@
 <?php
 return [
+    'timeZone' => 'Asia/Calcutta',
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
