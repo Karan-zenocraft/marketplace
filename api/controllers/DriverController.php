@@ -86,6 +86,7 @@ class DriverController extends \yii\base\Controller
                  $amReponseParam['last_name'] = $model->last_name;
                  $amReponseParam['phone'] = $model->phone;
                  $amReponseParam['role'] = $model->role_id;
+                 $amReponseParam['is_approve'] = $model->is_approve;
             //$amReponseParam['phone'] = $model->phone;
                  $amReponseParam['email_verification_code'] = $model->email_verification_code;
                  $amReponseParam['is_phone_code_verified'] = $model->is_phone_code_verified;

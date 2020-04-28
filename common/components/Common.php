@@ -78,7 +78,7 @@ class Common
     public static function sendMailToUser($ssToEmail, $asFromEmail, $ssSubject, $ssBody, $attach = false)
     {
         $result = Yii::$app->mail->compose()
-            ->setFrom([$asFromEmail => "Clian Essentials Admin"])
+            ->setFrom([$asFromEmail => "MarvelAPP Admin"])
             ->setTo($ssToEmail)
             ->setSubject($ssSubject)
             ->setHtmlBody($ssBody)
@@ -1738,27 +1738,20 @@ class Common
             Common::encodeResponseJSON($WholeMealData);
         }
     }
-    public static function checkRestaurantStatus($restaurant_id)
+ public static function checkDriverApproval($id)
     {
-        $valid = 0;
 
-        $restaurant = Restaurants::findOne($restaurant_id);
-
-        if ($restaurant->status == Yii::$app->params['user_status_value']['active']) {
-            $valid = 1;
+        if (($model = Users::findOne($id)) !== null) {
+            if ($model->is_approve == Yii::$app->params['is_approve_admin_value']['decline']) {
+                $ssMessage = 'You are not approved by admin';
+                $WholeMealData = Common::negativeResponse($ssMessage);
+                Common::encodeResponseJSON($WholeMealData);
+            }
         } else {
-            $valid = 0;
+            $ssMessage = 'User is not available';
+            $WholeMealData = Common::negativeResponse($ssMessage);
+            Common::encodeResponseJSON($WholeMealData);
         }
-
-        if ($valid != 1) {
-            // FOR GENERATE ERROR RESPONSE IF TOKEN NOT VALID
-            $errormessage['success'] = '401';
-            $errormessage['message'] = 'Restaurant is not active today.';
-            $errormessage['data'] = array();
-            Common::encodeResponseJSON($errormessage);
-        }
-
-        return;
     }
     public static function checkRestaurantIsDeleted($restaurant_id)
     {
