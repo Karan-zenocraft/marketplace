@@ -167,6 +167,7 @@ class UsersController extends AdminCoreController
         $this->layout = 'popup';
         $userModel = Users::find()->where(['id' => $user_id])->one();
         if (!empty(Yii::$app->request->post()) && !empty($userModel)) {
+
             $postData = Yii::$app->request->post();
             $userModel->is_approve = $postData['Users']['is_approve'];
             $userModel->save(false);

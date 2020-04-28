@@ -44,7 +44,7 @@ return 'vehicle_details';
 public function rules()
 {
         return [
-            [['user_id', 'name', 'vehicle_type_id', 'seat_capacity', 'vehicle_registration_no', 'vehicle_image_front', 'vehicle_image_back', 'driver_license_image_front', 'driver_license_image_back', 'vehicle_registration_image_front', 'vehicle_registration_image_back', 'status', 'created_at', 'updated_at'], 'required'],
+            [['user_id', 'name', 'vehicle_type_id', 'seat_capacity', 'vehicle_registration_no', 'vehicle_image_front', 'vehicle_image_back', 'driver_license_image_front', 'driver_license_image_back', 'vehicle_registration_image_front', 'vehicle_registration_image_back', 'status', 'created_at', 'updated_ais_approvet'], 'required'],
             [['user_id', 'vehicle_type_id', 'seat_capacity', 'status'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['name', 'vehicle_registration_no', 'vehicle_image_front', 'vehicle_image_back', 'driver_license_image_front', 'driver_license_image_back', 'vehicle_registration_image_front', 'vehicle_registration_image_back'], 'string', 'max' => 255],

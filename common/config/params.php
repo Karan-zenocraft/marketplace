@@ -28,4 +28,6 @@ return [
     'administrator_role_id' => '2',
     'action' => ["1" => "delete", "2" => "archive", "3" => "un_archive"],
     'mail_sent' => ["false" => "0", "true" => "1"],
+    'is_approve_admin' => ['1' => "Approve", "0" => "Decline"],
+    'is_approve_admin_value' => ['approve' => "1", "decline" => "0"],
 ];

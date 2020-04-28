@@ -500,7 +500,7 @@ class DriverController extends \yii\base\Controller
             if ($emailformatemodel) {
 
                 //create template file
-                $AreplaceString = array('{resetLink}' => $resetLink, '{username}' => $omUsers->user_name);
+                $AreplaceString = array('{resetLink}' => $resetLink, '{username}' => $omUsers->first_name." ".$omUsers->last_name);
                 $body = Common::MailTemplate($AreplaceString, $emailformatemodel->body);
 
                 //send email for new generated password

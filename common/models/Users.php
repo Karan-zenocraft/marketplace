@@ -55,7 +55,7 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
               [['email'], 'email'],
             ['email', 'validateEmail'],
             ['phone', 'validatePhone'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['created_at', 'updated_at','is_approve'], 'safe'],
             [['photo'], 'image', 'extensions' => 'jpg, jpeg, gif, png'],
             [['email', 'password'], 'string', 'max' => 255],
             //  [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserRoles::className(), 'targetAttribute' => ['role_id' => 'id']],
@@ -78,6 +78,7 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'phone' => 'Phone',
             'badge_count' => 'Badge Count',
             'status' => 'Status',
+            'is_approve' => 'Is Approve',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

@@ -13,7 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="portlet-body form block-content collapse in">
         <div class="users-form span12 hours_form">
-
             <?php $form = ActiveForm::begin(['id' => 'approve_driver_form']);?>
             <?php //Html::checkBox('select_all', false, array('label' => 'Select All', 'class' => 'select_all')) ?>
                             <?=$form->field($userModel, "is_approve")->dropDownList(Yii::$app->params['is_approve_admin'])?>
