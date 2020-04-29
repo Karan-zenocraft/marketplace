@@ -17,7 +17,7 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
-
+use \yii\web\UploadedFile;
 class Common
 {
 
@@ -1981,4 +1981,16 @@ class Common
         ]);
 
     }
+    public static function uploadImage($model,$image_name,$old_image){
+        $model->$image_name = UploadedFile::getInstanceByName($image_name);
+        $Modifier = md5(($model->$image_name));
+        $OriginalModifier = $Modifier . rand(11111, 99999);
+        $Extension = $model->$image_name->extension;
+        $model->$image_name->saveAs(__DIR__ . "../../../uploads/driver_images/" . $OriginalModifier . '.' . $model->$image_name->extension);
+        $model->$image_name = $OriginalModifier . '.' . $Extension;
+        if (!empty($old_image) && file_exists(Yii::getAlias('@root') . '/uploads/driver_images/' . $old_image)) {
+                    unlink(Yii::getAlias('@root') . '/uploads/driver_images/' . $old_image);
+        }
+        return $model->$image_name;
+}
 }

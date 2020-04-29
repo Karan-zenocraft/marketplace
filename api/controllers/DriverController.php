@@ -654,6 +654,87 @@ class DriverController extends \yii\base\Controller
         // FOR ENCODE RESPONSE INTO JSON //
         Common::encodeResponseJSON($amResponse);
     }
+
+
+    public function actionEditVehicleDetails()
+    {
+        //Get all request parameter
+        $amData = Common::checkRequestType();
+        $amResponse = $amReponseParam = [];
+
+        // Check required validation for request parameter.
+        $amRequiredParams = array('user_id', 'name', 'vehicle_type_id', 'seat_capacity', 'vehicle_registration_no');
+        $amParamsResult = Common::checkRequestParameterKey($amData['request_param'], $amRequiredParams);
+
+        // If any getting error in request paramter then set error message.
+        if (!empty($amParamsResult['error'])) {
+            $amResponse = Common::errorResponse($amParamsResult['error']);
+            Common::encodeResponseJSON($amResponse);
+        }
+
+        $requestParam = $amData['request_param'];
+        $requestFileparam = $amData['file_param'];
+                //Check User Status//
+        Common::matchUserStatus($requestParam['user_id']);
+        //VERIFY AUTH TOKEN
+        $authToken = Common::get_header('auth_token');
+        Common::checkAuthentication($authToken, $requestParam['user_id']);
+        $snUserId = $requestParam['user_id'];
+        $model = Users::findOne(["id" => $snUserId]);
+        if (!empty($model)) {
+            $vehicleModel = VehicleDetails::find()->where(["user_id"=>$snUserId])->one();
+            if(!empty($vehicleModel)){
+                $vehicleModel->name = $requestParam['name'];
+                $vehicleModel->vehicle_type_id = $requestParam['vehicle_type_id'];
+                $vehicleModel->seat_capacity = $requestParam['seat_capacity'];
+                $vehicleModel->vehicle_registration_no = $requestParam['vehicle_registration_no'];
+                $old_vehicle_image_front = $vehicleModel->vehicle_image_front;
+                $old_vehicle_image_back = $vehicleModel->vehicle_image_back;
+                $old_driver_license_image_front = $vehicleModel->driver_license_image_front;
+                $old_driver_license_image_back  = $vehicleModel->driver_license_image_back;
+                $old_vehicle_registration_image_front  = $vehicleModel->vehicle_registration_image_front;
+                $old_vehicle_registration_image_back  = $vehicleModel->vehicle_registration_image_back;
+            if (isset($requestFileparam['vehicle_image_front']['name'])) {
+                $vehicleModel->vehicle_image_front = Common::uploadImage($vehicleModel,"vehicle_image_front",$old_vehicle_image_front);
+            }
+            if (isset($requestFileparam['vehicle_image_back']['name'])) {
+                $vehicleModel->vehicle_image_back = Common::uploadImage($vehicleModel,"vehicle_image_back",$old_vehicle_image_back);
+            }
+            if (isset($requestFileparam['driver_license_image_front']['name'])) {
+                $vehicleModel->driver_license_image_front = Common::uploadImage($vehicleModel,"driver_license_image_front",$old_driver_license_image_front);
+            }
+            if (isset($requestFileparam['driver_license_image_back']['name'])) {
+                $vehicleModel->driver_license_image_back = Common::uploadImage($vehicleModel,"driver_license_image_back",$old_driver_license_image_back);
+            }
+            if (isset($requestFileparam['vehicle_registration_image_front']['name'])) {
+                $vehicleModel->vehicle_registration_image_front = Common::uploadImage($vehicleModel,"vehicle_registration_image_front",$old_vehicle_registration_image_front);
+            }
+            if (isset($requestFileparam['vehicle_registration_image_back']['name'])) {
+                $vehicleModel->vehicle_registration_image_back = Common::uploadImage($vehicleModel,"vehicle_registration_image_back",$old_vehicle_registration_image_back);
+            }
+                $vehicleModel->save(false);
+                $vehicleModel->vehicle_image_front = Common::get_driver_image_path($vehicleModel->vehicle_image_front);
+                $vehicleModel->vehicle_image_back = Common::get_driver_image_path($vehicleModel->vehicle_image_back);
+                $vehicleModel->driver_license_image_front = Common::get_driver_image_path($vehicleModel->driver_license_image_front);
+                $vehicleModel->driver_license_image_back = Common::get_driver_image_path($vehicleModel->driver_license_image_back);
+                $vehicleModel->vehicle_registration_image_front = Common::get_driver_image_path($vehicleModel->vehicle_registration_image_front);
+                $vehicleModel->vehicle_registration_image_back = Common::get_driver_image_path($vehicleModel->vehicle_registration_image_back);
+                $amReponseParam = $vehicleModel;
+                $ssMessage = "Vehicle Details Updated Successfully.";
+                $amResponse = Common::successResponse($ssMessage,$amReponseParam);
+            }else{
+                    $ssMessage = 'Vehicle Details not found';
+                    $amResponse = Common::errorResponse($ssMessage);
+            }
+            } else {
+                $ssMessage = 'Invalid User.';
+                $amResponse = Common::errorResponse($ssMessage);
+            }
+    
+        
+        // FOR ENCODE RESPONSE INTO JSON //
+        Common::encodeResponseJSON($amResponse);
+    }
     /*
      * Function : GetUserDetails()
      * Description : Get User Details
