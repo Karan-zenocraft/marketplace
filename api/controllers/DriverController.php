@@ -584,7 +584,7 @@ class DriverController extends \yii\base\Controller
         $amResponse = $amReponseParam = [];
 
         // Check required validation for request parameter.
-        $amRequiredParams = array('user_id', 'first_name', 'last_name', 'email', 'address', 'contact_no');
+        $amRequiredParams = array('user_id', 'first_name', 'last_name', 'email', 'phone');
         $amParamsResult = Common::checkRequestParameterKey($amData['request_param'], $amRequiredParams);
 
         // If any getting error in request paramter then set error message.
@@ -594,7 +594,7 @@ class DriverController extends \yii\base\Controller
         }
 
         $requestParam = $amData['request_param'];
-
+        $requestFileparam = $amData['file_param'];
         //Check User Status//
         Common::matchUserStatus($requestParam['user_id']);
         //VERIFY AUTH TOKEN
@@ -606,32 +606,43 @@ class DriverController extends \yii\base\Controller
                 $amResponse = Common::errorResponse("This Email id is already registered.");
                 Common::encodeResponseJSON($amResponse);
             }
-            if (!empty(Users::find()->where("contact_no = '" . $requestParam['contact_no'] . "' AND id != '" . $requestParam['user_id'] . "'")->one())) {
+            if (!empty(Users::find()->where("phone = '" . $requestParam['phone'] . "' AND id != '" . $requestParam['user_id'] . "'")->one())) {
 
-                $amResponse = Common::errorResponse("Contact Number you entered is already registered by other user.");
+                $amResponse = Common::errorResponse("Phone Number you entered is already registered by other driver.");
                 Common::encodeResponseJSON($amResponse);
             }
 
             $snUserId = $requestParam['user_id'];
             $model = Users::findOne(["id" => $snUserId]);
             if (!empty($model)) {
-
+                $old_image = $model->photo;
                 // Database field
                 $model->first_name = $requestParam['first_name'];
                 $model->last_name = $requestParam['last_name'];
-                $model->address = !empty($requestParam['address']) ? $requestParam['address'] : "";
                 $model->email = !empty($requestParam['email']) ? $requestParam['email'] : "";
-                $model->contact_no = !empty($requestParam['contact_no']) ? $requestParam['contact_no'] : '';
+                $model->phone = !empty($requestParam['phone']) ? $requestParam['phone'] : '';
+        if (isset($requestFileparam['photo']['name'])) {
 
+
+            $model->photo = UploadedFile::getInstanceByName('photo');
+            $Modifier = md5(($model->photo));
+            $OriginalModifier = $Modifier . rand(11111, 99999);
+            $Extension = $model->photo->extension;
+            $model->photo->saveAs(__DIR__ . "../../../uploads/profile_pictures/" . $OriginalModifier . '.' . $model->photo->extension);
+            $model->photo = $OriginalModifier . '.' . $Extension;
+        }
                 if ($model->save(false)) {
+            if (!empty($old_image) && file_exists(Yii::getAlias('@root') . '/uploads/profile_pictures/' . $old_image)) {
+                    unlink(Yii::getAlias('@root') . '/uploads/profile_pictures/' . $old_image);
+                }
                     $ssMessage = 'Your profile has been updated successfully.';
 
-                    $amReponseParam['user_email'] = $model->email;
+                    $amReponseParam['email'] = $model->email;
                     $amReponseParam['user_id'] = $model->id;
                     $amReponseParam['first_name'] = $model->first_name;
                     $amReponseParam['last_name'] = $model->last_name;
-                    $amReponseParam['address'] = !empty($model->address) ? $model->address : "";
-                    $amReponseParam['contact_no'] = !empty($model->contact_no) ? $model->contact_no : "";
+                     $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "uploads/no_image.png";
+                    $amReponseParam['phone'] = !empty($model->phone) ? $model->phone : "";
                     $amReponseParam['auth_token'] = !empty($model->auth_token) ? $model->auth_token : "";
                     $amResponse = Common::successResponse($ssMessage, array_map('strval', $amReponseParam));
                 }

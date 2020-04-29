@@ -129,7 +129,7 @@ class UsersController extends AdminCoreController
                 $delete = $model->oldAttributes['photo'];
                 $file_name = $file->basename . "_" . uniqid() . "." . $file->extension;
                 $file_filter = str_replace(" ", "", $file_name);
-                if (!empty($old_image) && file_exists(Yii::getAlias('@root') . '/uploads/' . $old_image)) {
+                if (!empty($old_image) && file_exists(Yii::getAlias('@root') . '/uploads/profile_pictures/' . $old_image)) {
                     unlink(Yii::getAlias('@root') . '/uploads/profile_pictures/' . $old_image);
                 }
                 $file->saveAs(Yii::getAlias('@root') . '/uploads/profile_pictures/' . $file_filter, false);
