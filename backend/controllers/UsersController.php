@@ -162,7 +162,7 @@ class UsersController extends AdminCoreController
         Yii::$app->session->setFlash('success', Yii::getAlias('@user_delete_message'));
         return $this->redirect(['index']);
     }
-       public function actionApproveDriver($user_id)
+      /* public function actionApproveDriver($user_id)
     {
         $this->layout = 'popup';
         $userModel = Users::find()->where(['id' => $user_id])->one();
@@ -178,7 +178,7 @@ class UsersController extends AdminCoreController
         return $this->render('approve_driver', [
             'userModel' => $userModel,
         ]);
-    }
+    }*/
 
     /**
      * Finds the Users model based on its primary key value.

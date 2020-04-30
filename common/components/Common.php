@@ -1967,7 +1967,7 @@ class Common
         return Html::a('<i class="icon-list icon-white"></i> ', $url, [
             'title' => Yii::t('yii', "View Vehicle Details"),
             'class' => 'btn btn-primary btn-small colorbox_popup',
-            'onClick' => 'javascript:openColorBox(1100,500);',
+            //'onClick' => 'javascript:openColorBox(1100,500);',
         ]);
 
     }
@@ -1993,4 +1993,48 @@ class Common
         }
         return $model->$image_name;
 }
+
+    public function push_notification_android($device_id, $title, $body)
+    {
+
+        //API URL of FCM
+        $url = 'https://fcm.googleapis.com/fcm/send';
+
+        /*api_key available in:
+        Firebase Console -> Project Settings -> CLOUD MESSAGING -> Server key*/$api_key = Yii::$app->params['android_fcm_api_key'];
+
+        $fields = array(
+            'registration_ids' => array(
+                $device_id,
+            ),
+            'data' => array(
+                "message" => "message",
+            ),
+            'notification' => array(
+                'title' => $title,
+                'body' => $body,
+            ),
+        );
+
+        //header includes Content type and api key
+        $headers = array(
+            'Content-Type:application/json',
+            'Authorization:key=' . $api_key,
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        $result = curl_exec($ch);
+        if ($result === false) {
+            die('FCM Send Error: ' . curl_error($ch));
+        }
+        curl_close($ch);
+        return $result;
+    }
 }

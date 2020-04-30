@@ -2,12 +2,13 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use common\components\Common;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\VehicleDetailsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Vehicle Details';
+$this->title = 'Manage Vehicle Details';
+$this->params['breadcrumbs'][] = ['label' => 'Manage Users', 'url' => ['users/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="vehicle-details-index email-format-index">
@@ -122,7 +123,23 @@ $this->params['breadcrumbs'][] = $this->title;
             //'created_at',
             //'updated_at',
 
-          //  ['class' => 'yii\grid\ActionColumn'],
+         [
+            'header' => 'Actions',
+            'class' => 'yii\grid\ActionColumn',
+            'headerOptions' => ["style" => "width:40%;"],
+            'contentOptions' => ["style" => "width:40%;"],
+            'template' => '{approve_vehicle}',
+            'buttons' => [
+           'approve_vehicle' => function ($url, $model) {
+                    $title = "Approve Vehicle";
+                    $flag = 5;
+                    $url = Yii::$app->urlManager->createUrl(['vehicle-details/approve-vehicle', 'vehicle_id' => $model->id]);
+                    return Common::template_approve_driver($url, $model, $title, $flag);
+
+                },
+
+            ],
+        ],
         ],
     ]); ?>
         </div>

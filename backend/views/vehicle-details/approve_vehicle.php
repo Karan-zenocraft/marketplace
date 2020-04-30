@@ -3,7 +3,7 @@
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
-$this->title = Yii::t('app', 'Approve Product: ' . $userModel->first_name." ".$userModel->last_name);
+$this->title = Yii::t('app', 'Approve Product: ' . $vehicleModel->name);
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="email-format-index">
@@ -15,7 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="users-form span12 hours_form">
             <?php $form = ActiveForm::begin(['id' => 'approve_driver_form']);?>
             <?php //Html::checkBox('select_all', false, array('label' => 'Select All', 'class' => 'select_all')) ?>
-                            <?=$form->field($userModel, "is_approve")->dropDownList(Yii::$app->params['is_approve_admin'])?>
+                            <?=$form->field($vehicleModel, "is_approve")->dropDownList(Yii::$app->params['is_approve_vehicle']); ?>
+
+                             <?=$form->field($vehicleModel, "admin_message")->textArea(); ?>
                        </div>
                    </div>
 

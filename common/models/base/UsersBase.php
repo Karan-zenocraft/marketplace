@@ -7,6 +7,7 @@ use common\models\VehicleDetails;
 use common\models\DeviceDetails;
 use common\models\UserRoles;
 use common\models\DriverAccountDetails;
+use common\models\NotificationList;
 
 /**
  * This is the model class for table "users".
@@ -44,7 +45,7 @@ class Users extends \yii\db\ActiveRecord
     {
         return [
             [['role_id','badge_count', 'status'], 'integer'],
-            [['created_at', 'updated_at','first_name','last_name','phone','photo','email_verification_code','is_email_code_verified','is_phone_code_verified','user_status','is_approve','wallet'], 'safe'],
+            [['created_at', 'updated_at','first_name','last_name','phone','photo','email_verification_code','is_email_code_verified','is_phone_code_verified','user_status','wallet'], 'safe'],
             [['first_name', 'email', 'password', 'photo'], 'string', 'max' => 255],
             [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserRole::className(), 'targetAttribute' => ['role_id' => 'id']],
         ];
@@ -79,6 +80,10 @@ class Users extends \yii\db\ActiveRecord
     {
     return $this->hasOne(DriverAccountDetails::className(), ['id' => 'user_id']);
     }
+      public function getNotificationLists()
+    {
+        return $this->hasMany(NotificationList::className(), ['user_id' => 'id']);
+    }
 
     public function getRole()
     {
@@ -86,7 +91,7 @@ class Users extends \yii\db\ActiveRecord
     }
       public function getVehicleDetails()
     {
-    return $this->hasOne(VehicleDetails::className(), ['id' => 'user_id']);
+    return $this->hasMany(VehicleDetails::className(), ['user_id' => 'id']);
     }
      public function getDeviceDetails()
     {

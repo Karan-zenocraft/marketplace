@@ -1,6 +1,7 @@
 <?php
 return [
     'adminEmail' => 'testingforproject0@gmail.com',
+    'marveladminEmail' => 'rutusha.joshi@zenocraft.com',
     'supportEmail' => 'support@example.com',
     'senderEmail' => 'noreply@example.com',
     'senderName' => 'Example.com mailer',
@@ -28,6 +29,8 @@ return [
     'administrator_role_id' => '2',
     'action' => ["1" => "delete", "2" => "archive", "3" => "un_archive"],
     'mail_sent' => ["false" => "0", "true" => "1"],
-    'is_approve_admin' => ['1' => "Approve", "0" => "Decline"],
-    'is_approve_admin_value' => ['approve' => "1", "decline" => "0"],
+    'is_approve_vehicle' => ['1' => "Approve", "0" => "Decline","2"=>"Pending"],
+    'is_approve_vehicle_value' => ['approve' => "1", "decline" => "0","pending"=>"2"],
+    'device_type' => ["android" => "1", "ios" => "2"],
+     'android_fcm_api_key' => 'AAAAy6A2HXo:APA91bFNAdf-gRAwul4F-JI7Bd68dpofkpCJWWC8EPzUCxVKn-xBHt1tD3C8pVXdHRbrSH92e8JWzQyt7MMJnIHn6P3Hn8Vd7hTWHOT8ai9-9UDNUfpPPP3R7mL2niLDfLn5tsJFpYqB',
 ];

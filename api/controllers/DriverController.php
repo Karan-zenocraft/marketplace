@@ -87,7 +87,6 @@ class DriverController extends \yii\base\Controller
                  $amReponseParam['last_name'] = $model->last_name;
                  $amReponseParam['phone'] = $model->phone;
                  $amReponseParam['role'] = $model->role_id;
-                 $amReponseParam['is_approve'] = $model->is_approve;
             //$amReponseParam['phone'] = $model->phone;
                  $amReponseParam['email_verification_code'] = $model->email_verification_code;
                  $amReponseParam['is_phone_code_verified'] = $model->is_phone_code_verified;
@@ -274,14 +273,9 @@ class DriverController extends \yii\base\Controller
         Common::checkAuthentication($authToken, $requestParam['user_id']);
         $oModelUser = Users::findOne($requestParam['user_id']);
         if (!empty($oModelUser)) {
-            $vehicleDetailsModel = VehicleDetails::find()->where(['user_id'=>$requestParam['user_id']])->one();
-            if(!empty($vehicleDetailsModel)){
-                $ssMessage = 'Your vehicle details already added.';
-                $amResponse = Common::errorResponse($ssMessage);
-                Common::encodeResponseJSON($amResponse);
-            }else{
                 $checkVehicleType = VehicleTypes::findOne($requestParam['vehicle_type_id']);
                 if(!empty($checkVehicleType)){
+                $vehicleDefaultSet = VehicleDetails::updateAll(['is_default' => '0'], ['user_id' => $requestParam['user_id']]);
                 $vehicleDetails = new VehicleDetails;
                 $vehicleDetails->user_id = $requestParam['user_id'];
                 $vehicleDetails->name = $requestParam['name'];
@@ -289,6 +283,8 @@ class DriverController extends \yii\base\Controller
                 $vehicleDetails->seat_capacity = $requestParam['seat_capacity'];
                 $vehicleDetails->vehicle_registration_no = $requestParam['vehicle_registration_no'];
                 $vehicleDetails->status = "1";
+                $vehicleDetails->is_default = "1";
+
                 foreach ($requestFileparam as $key => $value) {
                     $vehicleDetails->$key = UploadedFile::getInstanceByName($key);
                     $Modifier = md5(($vehicleDetails->$key));
@@ -297,7 +293,20 @@ class DriverController extends \yii\base\Controller
                     $vehicleDetails->$key->saveAs(__DIR__ . "../../../uploads/driver_images/" . $OriginalModifier . '.' . $vehicleDetails->$key->extension);
                     $vehicleDetails->$key = $OriginalModifier . '.' . $Extension;
                 }
-                $vehicleDetails->save(false);
+                if($vehicleDetails->save(false)){
+
+                $emailformatemodel = EmailFormat::findOne(["title" => 'approve_vehicle', "status" => '1']);
+                if ($emailformatemodel) {
+
+                    //create template file
+                    $AreplaceString = array('{driver_name}' => $oModelUser->first_name." ".$oModelUser->last_name,'{vehicle_name}'=>$vehicleDetails->name);
+
+                    $body = Common::MailTemplate($AreplaceString, $emailformatemodel->body);
+                    $ssSubject = $emailformatemodel->subject;
+                    //send email for new generated password
+                    $ssResponse = Common::sendMail(Yii::$app->params['marveladminEmail'], Yii::$app->params['adminEmail'], $ssSubject, $body);
+
+                }
                 $vehicleDetails->vehicle_image_front = Common::get_driver_image_path($vehicleDetails->vehicle_image_front);
                 $vehicleDetails->vehicle_image_back = Common::get_driver_image_path($vehicleDetails->vehicle_image_back);
                 $vehicleDetails->driver_license_image_front = Common::get_driver_image_path($vehicleDetails->driver_license_image_front);
@@ -307,11 +316,12 @@ class DriverController extends \yii\base\Controller
                 $amReponseParam = $vehicleDetails;
                 $ssMessage = "Your Vehicle Details added successfully.";
                 $amResponse = Common::successResponse($ssMessage,$amReponseParam);
+                }
             }else{
                 $ssMessage = 'Invalid vehicle type.';
                 $amResponse = Common::errorResponse($ssMessage);
             }
-            }
+            
         } else {
             $ssMessage = 'Invalid User.';
             $amResponse = Common::errorResponse($ssMessage);
@@ -650,7 +660,6 @@ class DriverController extends \yii\base\Controller
                  $amReponseParam['last_name'] = $model->last_name;
                  $amReponseParam['phone'] = $model->phone;
                  $amReponseParam['role'] = $model->role_id;
-                 $amReponseParam['is_approve'] = $model->is_approve;
             //$amReponseParam['phone'] = $model->phone;
                  $amReponseParam['email_verification_code'] = $model->email_verification_code;
                  $amReponseParam['is_phone_code_verified'] = $model->is_phone_code_verified;
@@ -680,7 +689,7 @@ class DriverController extends \yii\base\Controller
         $amResponse = $amReponseParam = [];
 
         // Check required validation for request parameter.
-        $amRequiredParams = array('user_id', 'name', 'vehicle_type_id', 'seat_capacity', 'vehicle_registration_no');
+        $amRequiredParams = array('user_id','vehicle_id','name', 'vehicle_type_id', 'seat_capacity', 'vehicle_registration_no');
         $amParamsResult = Common::checkRequestParameterKey($amData['request_param'], $amRequiredParams);
 
         // If any getting error in request paramter then set error message.
@@ -699,7 +708,7 @@ class DriverController extends \yii\base\Controller
         $snUserId = $requestParam['user_id'];
         $model = Users::findOne(["id" => $snUserId]);
         if (!empty($model)) {
-            $vehicleModel = VehicleDetails::find()->where(["user_id"=>$snUserId])->one();
+            $vehicleModel = VehicleDetails::find()->where(["id"=>$requestParam['vehicle_id']])->one();
             if(!empty($vehicleModel)){
                 $vehicleModel->name = $requestParam['name'];
                 $vehicleModel->vehicle_type_id = $requestParam['vehicle_type_id'];
@@ -729,7 +738,22 @@ class DriverController extends \yii\base\Controller
             if (isset($requestFileparam['vehicle_registration_image_back']['name'])) {
                 $vehicleModel->vehicle_registration_image_back = Common::uploadImage($vehicleModel,"vehicle_registration_image_back",$old_vehicle_registration_image_back);
             }
-                $vehicleModel->save(false);
+                if($vehicleModel->save(false)){
+                    if($vehicleModel->is_approve == Yii::$app->params['is_approve_vehicle_value']['decline']){
+                    $emailformatemodel = EmailFormat::findOne(["title" => 'approve_updated_vehicle', "status" => '1']);
+                    if ($emailformatemodel) {
+
+                        //create template file
+                        $AreplaceString = array('{driver_name}' => $model->first_name." ".$model->last_name,'{vehicle_name}'=>$vehicleModel->name);
+
+                        $body = Common::MailTemplate($AreplaceString, $emailformatemodel->body);
+                        $ssSubject = $emailformatemodel->subject;
+                        //send email for new generated password
+                        $ssResponse = Common::sendMail(Yii::$app->params['marveladminEmail'], Yii::$app->params['adminEmail'], $ssSubject, $body);
+
+                    }
+                    }
+
                 $vehicleModel->vehicle_image_front = Common::get_driver_image_path($vehicleModel->vehicle_image_front);
                 $vehicleModel->vehicle_image_back = Common::get_driver_image_path($vehicleModel->vehicle_image_back);
                 $vehicleModel->driver_license_image_front = Common::get_driver_image_path($vehicleModel->driver_license_image_front);
@@ -739,6 +763,7 @@ class DriverController extends \yii\base\Controller
                 $amReponseParam = $vehicleModel;
                 $ssMessage = "Vehicle Details Updated Successfully.";
                 $amResponse = Common::successResponse($ssMessage,$amReponseParam);
+                }
             }else{
                     $ssMessage = 'Vehicle Details not found';
                     $amResponse = Common::errorResponse($ssMessage);
@@ -760,7 +785,7 @@ class DriverController extends \yii\base\Controller
      * Author : Rutusha Joshi
      */
 
-    public function actionGetUserDetails()
+    public function actionGetDriverVehicleDetails()
     {
         //Get all request parameter
         $amData = Common::checkRequestType();
@@ -787,14 +812,6 @@ class DriverController extends \yii\base\Controller
         if (!empty($model)) {
             // Device Registration
             $ssMessage = 'User Profile Details.';
-
-            $amReponseParam['user_email'] = $model->email;
-            $amReponseParam['user_id'] = $model->id;
-            $amReponseParam['first_name'] = $model->first_name;
-            $amReponseParam['last_name'] = $model->last_name;
-            $amReponseParam['address'] = $model->address;
-            $amReponseParam['contact_no'] = $model->contact_no;
-
             $amResponse = Common::successResponse($ssMessage, array_map('strval', $amReponseParam));
         } else {
             $ssMessage = 'Invalid User.';

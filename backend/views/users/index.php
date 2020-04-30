@@ -108,7 +108,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'yii\grid\ActionColumn',
             'headerOptions' => ["style" => "width:40%;"],
             'contentOptions' => ["style" => "width:40%;"],
-            'template' => '{update}{manage_vehicle_details}{approve_driver}{delete}',
+            'template' => '{update}{manage_vehicle_details}{delete}',
             'buttons' => [
                 'update' => function ($url, $model) {
                     $flag = 1;
@@ -120,13 +120,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     $flag = 4;
                        $url = Yii::$app->urlManager->createUrl(['vehicle-details/index', 'user_id' => $model->id]);
                     return ($model->role_id == Yii::$app->params['userroles']['driver']) ? Common::template_view_vehicle_details($url, $model,$flag) : "";
-
-                },
-                  'approve_driver' => function ($url, $model) {
-                    $title = "Approve Driver";
-                    $flag = 5;
-                    $url = Yii::$app->urlManager->createUrl(['users/approve-driver', 'user_id' => $model->id]);
-                    return ($model->role_id == Yii::$app->params['userroles']['driver']) ? Common::template_approve_driver($url, $model, $title, $flag) : "";
 
                 },
                 'delete' => function ($url, $model) {

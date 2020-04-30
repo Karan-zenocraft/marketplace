@@ -22,6 +22,9 @@ use common\models\VehicleTypes;
     * @property string $vehicle_registration_image_front
     * @property string $vehicle_registration_image_back
     * @property integer $status
+    * @property string $is_default
+    * @property string $is_approve
+    * @property string $admin_message
     * @property string $created_at
     * @property string $updated_at
     *
@@ -44,10 +47,11 @@ return 'vehicle_details';
 public function rules()
 {
         return [
-            [['user_id', 'name', 'vehicle_type_id', 'seat_capacity', 'vehicle_registration_no', 'vehicle_image_front', 'vehicle_image_back', 'driver_license_image_front', 'driver_license_image_back', 'vehicle_registration_image_front', 'vehicle_registration_image_back', 'status', 'created_at', 'updated_ais_approvet'], 'required'],
+            [['user_id', 'name', 'vehicle_type_id', 'seat_capacity', 'vehicle_registration_no', 'vehicle_image_front', 'vehicle_image_back', 'driver_license_image_front', 'driver_license_image_back', 'vehicle_registration_image_front', 'vehicle_registration_image_back', 'status', 'created_at', 'updated_at'], 'required'],
             [['user_id', 'vehicle_type_id', 'seat_capacity', 'status'], 'integer'],
+            [['is_default', 'is_approve'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
-            [['name', 'vehicle_registration_no', 'vehicle_image_front', 'vehicle_image_back', 'driver_license_image_front', 'driver_license_image_back', 'vehicle_registration_image_front', 'vehicle_registration_image_back'], 'string', 'max' => 255],
+            [['name', 'vehicle_registration_no', 'vehicle_image_front', 'vehicle_image_back', 'driver_license_image_front', 'driver_license_image_back', 'vehicle_registration_image_front', 'vehicle_registration_image_back', 'admin_message'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['vehicle_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => VehicleTypes::className(), 'targetAttribute' => ['vehicle_type_id' => 'id']],
         ];
@@ -60,9 +64,9 @@ public function attributeLabels()
 {
 return [
     'id' => 'ID',
-    'user_id' => 'Driver',
+    'user_id' => 'User ID',
     'name' => 'Name',
-    'vehicle_type_id' => 'Vehicle Type',
+    'vehicle_type_id' => 'Vehicle Type ID',
     'seat_capacity' => 'Seat Capacity',
     'vehicle_registration_no' => 'Vehicle Registration No',
     'vehicle_image_front' => 'Vehicle Image Front',
@@ -72,6 +76,9 @@ return [
     'vehicle_registration_image_front' => 'Vehicle Registration Image Front',
     'vehicle_registration_image_back' => 'Vehicle Registration Image Back',
     'status' => 'Status',
+    'is_default' => 'Is Default',
+    'is_approve' => 'Is Approve',
+    'admin_message' => 'Admin Message',
     'created_at' => 'Created At',
     'updated_at' => 'Updated At',
 ];
