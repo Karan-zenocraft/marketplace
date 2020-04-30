@@ -6,7 +6,7 @@ use Yii;
 use common\models\VehicleDetails;
 use common\models\DeviceDetails;
 use common\models\UserRoles;
-
+use common\models\DriverAccountDetails;
 
 /**
  * This is the model class for table "users".
@@ -75,13 +75,18 @@ class Users extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+     public function getDriverAccountDetails()
+    {
+    return $this->hasOne(DriverAccountDetails::className(), ['id' => 'user_id']);
+    }
+
     public function getRole()
     {
         return $this->hasOne(UserRoles::className(), ['id' => 'role_id']);
     }
       public function getVehicleDetails()
     {
-    return $this->hasMany(VehicleDetails::className(), ['user_id' => 'id']);
+    return $this->hasOne(VehicleDetails::className(), ['id' => 'user_id']);
     }
      public function getDeviceDetails()
     {
