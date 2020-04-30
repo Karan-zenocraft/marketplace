@@ -91,7 +91,7 @@ class DriverController extends \yii\base\Controller
             //$amReponseParam['phone'] = $model->phone;
                  $amReponseParam['email_verification_code'] = $model->email_verification_code;
                  $amReponseParam['is_phone_code_verified'] = $model->is_phone_code_verified;
-                 $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "uploads/no_image.png";
+                 $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "no_image.png";
                  $amReponseParam['device_token'] = $device_model->device_tocken;
                  $amReponseParam['device_type'] = Yii::$app->params['device_type_value'][$device_model->type];
             /*   $amReponseParam['gcm_registration_id'] = !empty($device_model->gcm_id) ? $device_model->gcm_id : "";*/
@@ -222,7 +222,7 @@ class DriverController extends \yii\base\Controller
             //$amReponseParam['phone'] = $model->phone;
             $amReponseParam['email_verification_code'] = $model->email_verification_code;
             $amReponseParam['is_phone_code_verified'] = $model->is_phone_code_verified;
-            $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "uploads/no_image.png";
+            $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "no_image.png";
             $amReponseParam['device_token'] = $device_model->device_tocken;
             $amReponseParam['device_type'] = Yii::$app->params['device_type_value'][$device_model->type];
             /*   $amReponseParam['gcm_registration_id'] = !empty($device_model->gcm_id) ? $device_model->gcm_id : "";*/
@@ -642,7 +642,7 @@ class DriverController extends \yii\base\Controller
                     $amReponseParam['user_id'] = $model->id;
                     $amReponseParam['first_name'] = $model->first_name;
                     $amReponseParam['last_name'] = $model->last_name;
-                     $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "uploads/no_image.png";
+                     $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "no_image.png";
                     $amReponseParam['phone'] = !empty($model->phone) ? $model->phone : "";
                     $amReponseParam['auth_token'] = !empty($model->auth_token) ? $model->auth_token : "";
                     $amResponse = Common::successResponse($ssMessage, array_map('strval', $amReponseParam));

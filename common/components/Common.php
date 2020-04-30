@@ -1958,7 +1958,7 @@ class Common
         return preg_replace('/[^A-Za-z0-9]/', "", $string);
     }
     public static function get_driver_image_path($img){
-          $path = !empty($img) && file_exists(Yii::getAlias('@root') . '/' . "uploads/driver_images/" . $img) ? Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $img : Yii::$app->params['root_url'] . '/' . "uploads/no_image.png";
+          $path = !empty($img) && file_exists(Yii::getAlias('@root') . '/' . "uploads/driver_images/" . $img) ? Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $img : Yii::$app->params['root_url'] . '/' . "no_image.png";
           return $path;
     }
     public static function template_view_vehicle_details($url, $model, $flag)
