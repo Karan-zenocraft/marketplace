@@ -636,16 +636,32 @@ class DriverController extends \yii\base\Controller
             if (!empty($old_image) && file_exists(Yii::getAlias('@root') . '/uploads/profile_pictures/' . $old_image)) {
                     unlink(Yii::getAlias('@root') . '/uploads/profile_pictures/' . $old_image);
                 }
-                    $ssMessage = 'Your profile has been updated successfully.';
+                $ssMessage = 'Your profile has been updated successfully.';
+                $vehicleDetails = VehicleDetails::find()->where(['user_id'=>$model->id])->one();
+                if(empty($vehicleDetails)){
+                    $step3 = "0";
+                }else{
+                    $step3 = "1";
+                }
+                 $amReponseParam['step3'] = $step3;
+                 $amReponseParam['email'] = $model->email;
+                 $amReponseParam['id'] = $model->id;
+                 $amReponseParam['first_name'] = $model->first_name;
+                 $amReponseParam['last_name'] = $model->last_name;
+                 $amReponseParam['phone'] = $model->phone;
+                 $amReponseParam['role'] = $model->role_id;
+                 $amReponseParam['is_approve'] = $model->is_approve;
+            //$amReponseParam['phone'] = $model->phone;
+                 $amReponseParam['email_verification_code'] = $model->email_verification_code;
+                 $amReponseParam['is_phone_code_verified'] = $model->is_phone_code_verified;
+                 $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "no_image.png";
+                 $device_model = Devicedetails::findOne(['user_id' => $model->id]);
+                 $amReponseParam['device_token'] = (!empty($device_model) && !empty($device_model->device_tocken)) ? $device_model->device_tocken : "";
+                 $amReponseParam['device_type'] = (!empty($device_model) && !empty($device_model->type)) ? Yii::$app->params['device_type_value'][$device_model->type] : "";
+            /*   $amReponseParam['gcm_registration_id'] = !empty($device_model->gcm_id) ? $device_model->gcm_id : "";*/
+                 $amReponseParam['auth_token'] = $model->auth_token;
 
-                    $amReponseParam['email'] = $model->email;
-                    $amReponseParam['user_id'] = $model->id;
-                    $amReponseParam['first_name'] = $model->first_name;
-                    $amReponseParam['last_name'] = $model->last_name;
-                     $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "no_image.png";
-                    $amReponseParam['phone'] = !empty($model->phone) ? $model->phone : "";
-                    $amReponseParam['auth_token'] = !empty($model->auth_token) ? $model->auth_token : "";
-                    $amResponse = Common::successResponse($ssMessage, array_map('strval', $amReponseParam));
+                $amResponse = Common::successResponseLogin($ssMessage, array_map('strval', $amReponseParam),$model->id,$model->auth_token);
                 }
             } else {
                 $ssMessage = 'Invalid User.';
