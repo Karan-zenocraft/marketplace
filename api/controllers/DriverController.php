@@ -1011,4 +1011,57 @@ class DriverController extends \yii\base\Controller
         Common::encodeResponseJSON($amResponse);
     }
 
+        public function actionGetMyVehicleList()
+    {
+
+        $amData = Common::checkRequestType();
+
+        $amResponse = $amReponseParam = [];
+
+        // Check required validation for request parameter.
+        $amRequiredParams = array('user_id');
+        $amParamsResult = Common::checkRequiredParams($amData['request_param'], $amRequiredParams);
+        // If any getting error in request paramter then set error message.
+        if (!empty($amParamsResult['error'])){
+            $amResponse = Common::errorResponse($amParamsResult['error']);
+            Common::encodeResponseJSON($amResponse);
+        }
+        
+        $requestParam = $amData['request_param'];
+        //Check User Status//
+        Common::matchUserStatus($requestParam['user_id']);
+        //VERIFY AUTH TOKEN
+        $authToken = Common::get_header('auth_token');
+        Common::checkAuthentication($authToken, $requestParam['user_id']);
+        $oModelUser = Users::findOne($requestParam['user_id']);
+        if (!empty($oModelUser)) {
+            $vehicleList = VehicleDetails::find()->where(['user_id'=>$requestParam['user_id']])->asArray()->all();
+            if(!empty($vehicleList)){
+            array_walk($vehicleList, function ($arr) use (&$amResponseData) {
+                $ttt = $arr;
+                $ttt['vehicle_image_front'] = Common::get_driver_image_path($ttt['vehicle_image_front']);
+                $ttt['vehicle_image_back'] = Common::get_driver_image_path($ttt['vehicle_image_back']);
+                $ttt['driver_license_image_front'] = Common::get_driver_image_path($ttt['driver_license_image_front']);
+                $ttt['driver_license_image_back'] = Common::get_driver_image_path($ttt['driver_license_image_back']);
+                $ttt['vehicle_registration_image_front'] = Common::get_driver_image_path($ttt['vehicle_registration_image_front']);
+                $ttt['vehicle_registration_image_back'] = Common::get_driver_image_path($ttt['vehicle_registration_image_back']);
+                        $amResponseData[] = $ttt;
+                        return $amResponseData;
+                    });
+                $amReponseParam = $amResponseData;
+                $ssMessage = "My Vehicle list";
+                $amResponse = Common::successResponse($ssMessage,$amReponseParam);
+            }else{
+                $ssMessage = "Vehicles not found";
+                $amResponse = Common::successResponse($ssMessage,$amReponseParam);
+            }
+            
+        } else {
+            $ssMessage = 'Invalid User.';
+            $amResponse = Common::errorResponse($ssMessage);
+        }
+        // FOR ENCODE RESPONSE INTO JSON //
+        Common::encodeResponseJSON($amResponse);
+    }
+
 }
