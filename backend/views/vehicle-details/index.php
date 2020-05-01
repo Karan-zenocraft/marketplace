@@ -11,6 +11,19 @@ $this->title = 'Manage Vehicle Details';
 $this->params['breadcrumbs'][] = ['label' => 'Manage Users', 'url' => ['users/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<style type="text/css">
+  .modal-body {
+    position:relative; /* This avoids whatever it's absolute inside of it to go off the container */
+    height: 250px; /* let's imagine that your login box height is 250px . This height needs to be added, otherwise .img-responsive will be like "Oh no, I need to be vertically aligned?! but from which value I need to be aligned??" */
+}
+.img-responsive {
+   
+    left:50%;
+    top:50%;
+    margin-top:-25px; /* This needs to be half of the height */
+    margin-left:-25px; /* This needs to be half of the width */
+}
+</style>
 <div class="vehicle-details-index email-format-index">
 
     <div class="navbar navbar-inner block-header">
@@ -147,7 +160,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <div id="myModal" class="modal">
   <span class="close">&times;</span>
-  <img class="modal-content" id="img01">
+  <img class="img-responsive" id="img01">
   <div id="caption"></div>
 </div>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
