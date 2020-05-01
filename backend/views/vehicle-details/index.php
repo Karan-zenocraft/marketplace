@@ -49,74 +49,74 @@ $this->params['breadcrumbs'][] = $this->title;
             'vehicle_registration_no',
         [
             'attribute' => 'vehicle_image_front',
-            'format' => 'image',
-            'value' => function ($data) {
+                 'format' => 'html',
+             'value' => function ($data) {
                 if (!empty($data->vehicle_image_front)) {
-                    $vehicle_image_front = Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $data->vehicle_image_front;
+                $vehicle_image_front = Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $data->vehicle_image_front;
+                return Html::img($vehicle_image_front, ['alt'=>'Vehicle Image Front','width'=>'250','height'=>'100','class'=>"myImg"]);
                 } else {
-                    $vehicle_image_front = "-";
+                    return "-";
                 }
-                return $vehicle_image_front;
             },
         ],
         [
             'attribute' => 'vehicle_image_back',
-            'format' => 'image',
-            'value' => function ($data) {
+                 'format' => 'html',
+             'value' => function ($data) {
                 if (!empty($data->vehicle_image_back)) {
-                    $vehicle_image_back = Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $data->vehicle_image_back;
+                $vehicle_image_back = Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $data->vehicle_image_back;
+                return Html::img($vehicle_image_back, ['alt'=>'Vehicle Image Back','width'=>'250','height'=>'100','class'=>"myImg"]);
                 } else {
-                    $vehicle_image_back = "-";
+                    return "-";
                 }
-                return $vehicle_image_back;
             },
         ],
             [
             'attribute' => 'driver_license_image_front',
-            'format' => 'image',
+            'format' => 'html',
             'value' => function ($data) {
                 if (!empty($data->driver_license_image_front)) {
-                    $driver_license_image_front = Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $data->driver_license_image_front;
+                $driver_license_image_front = Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $data->driver_license_image_front;
+                return Html::img($driver_license_image_front, ['alt'=>'Driver Licence Image Front','width'=>'250','height'=>'100','class'=>"myImg"]);
                 } else {
-                    $driver_license_image_front = "-";
+                    return "-";
                 }
-                return $driver_license_image_front;
             },
         ],
          [
             'attribute' => 'driver_license_image_back',
-            'format' => 'image',
-            'value' => function ($data) {
+            'format' => 'html',
+             'value' => function ($data) {
                 if (!empty($data->driver_license_image_back)) {
-                    $driver_license_image_back = Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $data->driver_license_image_back;
+                $driver_license_image_back = Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $data->driver_license_image_back;
+                return Html::img($driver_license_image_back, ['alt'=>'Driver Licence Image Back','width'=>'250','height'=>'100','class'=>"myImg"]);
                 } else {
-                    $driver_license_image_back = "-";
+                    return "-";
                 }
-                return $driver_license_image_back;
             },
         ],
              [
             'attribute' => 'vehicle_registration_image_front',
-            'format' => 'image',
-            'value' => function ($data) {
+              'format' => 'html',
+             'value' => function ($data) {
                 if (!empty($data->vehicle_registration_image_front)) {
-                    $vehicle_registration_image_front = Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $data->vehicle_registration_image_front;
+                $vehicle_registration_image_front = Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $data->vehicle_registration_image_front;
+                return Html::img($vehicle_registration_image_front, ['alt'=>'Vehicle Registration Image Front','width'=>'250','height'=>'100','class'=>"myImg"]);
                 } else {
-                    $vehicle_registration_image_front = "-";
+                    return "-";
                 }
-                return $vehicle_registration_image_front;
             },
         ],
              [
             'attribute' => 'vehicle_registration_image_back',
-            'format' => 'image',
-            'value' => function ($data) {
+             'format' => 'html',
+             'value' => function ($data) {
                 if (!empty($data->vehicle_registration_image_back)) {
-                    $vehicle_registration_image_back = Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $data->vehicle_registration_image_back;
+                $vehicle_registration_image_back = Yii::$app->params['root_url'] . '/' . "uploads/driver_images/" . $data->vehicle_registration_image_back;
+                return Html::img($vehicle_registration_image_back, ['alt'=>'Vehicle Registration Image Back','width'=>'250','height'=>'100','class'=>"myImg"]);
                 } else {
-                    $vehicle_registration_image_back = "-";
+                    return "-";
                 }
-                return $vehicle_registration_image_back;
             },
         ],
             //'status',
@@ -145,4 +145,33 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div>
+<div id="myModal" class="modal">
+  <span class="close">&times;</span>
+  <img class="modal-content" id="img01">
+  <div id="caption"></div>
+</div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script type="text/javascript">
+$( document ).ready(function() {
+var modal = document.getElementById("myModal");
+
+// Get the image and insert it inside the modal - use its "alt" text as a caption
+var modalImg = document.getElementById("img01");
+var captionText = document.getElementById("caption");
+$(".myImg").on('click', function(event){
+  modal.style.display = "block";
+  modalImg.src = this.src;
+  captionText.innerHTML = this.alt;
+});
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() { 
+  modal.style.display = "none";
+}
+
+    });
+</script>
 
