@@ -7,7 +7,7 @@ use common\components\Common;
 /* @var $searchModel common\models\VehicleDetailsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Manage Vehicle Details';
+$this->title = 'Manage Vehicle Details : '.Common::get_user_name($_GET['user_id']);
 $this->params['breadcrumbs'][] = ['label' => 'Manage Users', 'url' => ['users/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -44,12 +44,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
           //  'id',
           //  'user_id',
-              [
-            'attribute' => 'user_id',
-            'value' => function ($data){
-                return !empty($data->user_id) ? $data->user->first_name." ".$data->user->last_name : '-';
-            },
-        ],
             'name',
            // 'vehicle_type_id',
             [

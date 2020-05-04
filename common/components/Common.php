@@ -1738,9 +1738,8 @@ class Common
             Common::encodeResponseJSON($WholeMealData);
         }
     }
- public static function checkDriverApproval($id)
+ public static function checkDriverVehicleApproval($id)
     {
-
         if (($model = Users::findOne($id)) !== null) {
             if ($model->is_approve == Yii::$app->params['is_approve_admin_value']['decline']) {
                 $ssMessage = 'You are not approved by admin';
@@ -1963,12 +1962,20 @@ class Common
     }
     public static function template_view_vehicle_details($url, $model, $flag)
     {
-
-        return Html::a('<i class="icon-list icon-white"></i> ', $url, [
-            'title' => Yii::t('yii', "View Vehicle Details"),
-            'class' => 'btn btn-primary btn-small colorbox_popup',
-            //'onClick' => 'javascript:openColorBox(1100,500);',
-        ]);
+        if($flag == "1"){
+            return Html::a('<i class="icon-list icon-white"></i> ', $url, [
+                'title' => Yii::t('yii', "View Vehicle Details"),
+                'class' => 'btn btn-primary btn-small colorbox_popup',
+                //'onClick' => 'javascript:openColorBox(1100,500);',
+            ]);
+        }else{
+            return Html::a('<i class="icon-list icon-white"></i> ', $url, [
+                'title' => Yii::t('yii', "View Vehicle Details"),
+                'class' => 'btn btn-primary btn-small colorbox_popup',
+                //'onClick' => 'javascript:openColorBox(1100,500);',
+            ]);
+            
+        }
 
     }
     public static function template_approve_driver($url, $model, $flag)

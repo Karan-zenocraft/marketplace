@@ -64,9 +64,9 @@ public function attributeLabels()
 {
 return [
     'id' => 'ID',
-    'user_id' => 'User ID',
+    'user_id' => 'User',
     'name' => 'Name',
-    'vehicle_type_id' => 'Vehicle Type ID',
+    'vehicle_type_id' => 'Vehicle Type',
     'seat_capacity' => 'Seat Capacity',
     'vehicle_registration_no' => 'Vehicle Registration No',
     'vehicle_image_front' => 'Vehicle Image Front',

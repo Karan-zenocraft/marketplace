@@ -108,7 +108,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'yii\grid\ActionColumn',
             'headerOptions' => ["style" => "width:40%;"],
             'contentOptions' => ["style" => "width:40%;"],
-            'template' => '{update}{manage_vehicle_details}{delete}',
+            'template' => '{update}{manage_vehicle_details}{view_driver_account_details}{delete}',
             'buttons' => [
                 'update' => function ($url, $model) {
                     $flag = 1;
@@ -116,9 +116,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
 
                  'manage_vehicle_details' => function ($url, $model) {
-                    $title = "Add Vehicle Rates";
+                    $title = "Manage Vehicle Details";
                     $flag = 4;
                        $url = Yii::$app->urlManager->createUrl(['vehicle-details/index', 'user_id' => $model->id]);
+                    return ($model->role_id == Yii::$app->params['userroles']['driver']) ? Common::template_view_vehicle_details($url, $model,$flag) : "";
+
+                },
+                'view_driver_account_details' => function ($url, $model) {
+                    $title = "View Driver's Account Details";
+                    $flag = 1;
+                       $url = Yii::$app->urlManager->createUrl(['driver-account-details/index', 'user_id' => $model->id]);
                     return ($model->role_id == Yii::$app->params['userroles']['driver']) ? Common::template_view_vehicle_details($url, $model,$flag) : "";
 
                 },

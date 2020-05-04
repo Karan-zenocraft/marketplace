@@ -26,14 +26,14 @@ class SiteController extends AdminCoreController
     /**
      * @inheritdoc
      */
-    public function actions()
+  /*  public function actions()
     {
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
         ];
-    }
+    }*/
 
     public function actionIndex()
     {
