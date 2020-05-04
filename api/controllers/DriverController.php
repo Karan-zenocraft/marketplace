@@ -632,7 +632,7 @@ class DriverController extends \yii\base\Controller
                 $model->last_name = $requestParam['last_name'];
                 $model->email = !empty($requestParam['email']) ? $requestParam['email'] : "";
                 $model->phone = !empty($requestParam['phone']) ? $requestParam['phone'] : '';
-        if (isset($requestFileparam['photo']['name'])) {
+        if (isset($requestFileparam['photo']['name']) && !empty($requestFileparam['photo']['name'])) {
 
 
             $model->photo = UploadedFile::getInstanceByName('photo');
@@ -643,7 +643,7 @@ class DriverController extends \yii\base\Controller
             $model->photo = $OriginalModifier . '.' . $Extension;
         }
                 if ($model->save(false)) {
-            if (!empty($old_image) && file_exists(Yii::getAlias('@root') . '/uploads/profile_pictures/' . $old_image)) {
+            if (isset($requestFileparam['photo']['name']) && !empty($requestFileparam['photo']['name']) && !empty($old_image) && file_exists(Yii::getAlias('@root') . '/uploads/profile_pictures/' . $old_image)) {
                     unlink(Yii::getAlias('@root') . '/uploads/profile_pictures/' . $old_image);
                 }
                 $ssMessage = 'Your profile has been updated successfully.';
@@ -1039,6 +1039,7 @@ class DriverController extends \yii\base\Controller
             if(!empty($vehicleList)){
             array_walk($vehicleList, function ($arr) use (&$amResponseData) {
                 $ttt = $arr;
+                $ttt['admin_message'] = !empty($ttt['admin_message']) ? $ttt['admin_message'] : "";
                 $ttt['vehicle_image_front'] = Common::get_driver_image_path($ttt['vehicle_image_front']);
                 $ttt['vehicle_image_back'] = Common::get_driver_image_path($ttt['vehicle_image_back']);
                 $ttt['driver_license_image_front'] = Common::get_driver_image_path($ttt['driver_license_image_front']);
