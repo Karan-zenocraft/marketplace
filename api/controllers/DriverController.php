@@ -1035,7 +1035,7 @@ class DriverController extends \yii\base\Controller
         Common::checkAuthentication($authToken, $requestParam['user_id']);
         $oModelUser = Users::findOne($requestParam['user_id']);
         if (!empty($oModelUser)) {
-            $vehicleList = VehicleDetails::find()->where(['user_id'=>$requestParam['user_id']])->asArray()->all();
+            $vehicleList = VehicleDetails::find()->with('vehicleType')->where(['user_id'=>$requestParam['user_id']])->asArray()->all();
             if(!empty($vehicleList)){
             array_walk($vehicleList, function ($arr) use (&$amResponseData) {
                 $ttt = $arr;
