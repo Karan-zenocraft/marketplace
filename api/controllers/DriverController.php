@@ -720,22 +720,22 @@ class DriverController extends \yii\base\Controller
                 $old_driver_license_image_back  = $vehicleModel->driver_license_image_back;
                 $old_vehicle_registration_image_front  = $vehicleModel->vehicle_registration_image_front;
                 $old_vehicle_registration_image_back  = $vehicleModel->vehicle_registration_image_back;
-            if (isset($requestFileparam['vehicle_image_front']['name'])) {
+            if (isset($requestFileparam['vehicle_image_front']['name']) && !empty($requestFileparam['vehicle_image_front']['name'])) {
                 $vehicleModel->vehicle_image_front = Common::uploadImage($vehicleModel,"vehicle_image_front",$old_vehicle_image_front);
             }
-            if (isset($requestFileparam['vehicle_image_back']['name'])) {
+            if (isset($requestFileparam['vehicle_image_back']['name']) && !empty($requestFileparam['vehicle_image_back']['name'])) {
                 $vehicleModel->vehicle_image_back = Common::uploadImage($vehicleModel,"vehicle_image_back",$old_vehicle_image_back);
             }
-            if (isset($requestFileparam['driver_license_image_front']['name'])) {
+            if (isset($requestFileparam['driver_license_image_front']['name']) && !empty($requestFileparam['driver_license_image_front']['name'])) {
                 $vehicleModel->driver_license_image_front = Common::uploadImage($vehicleModel,"driver_license_image_front",$old_driver_license_image_front);
             }
-            if (isset($requestFileparam['driver_license_image_back']['name'])) {
+            if (isset($requestFileparam['driver_license_image_back']['name']) && !empty($requestFileparam['driver_license_image_back']['name'])) {
                 $vehicleModel->driver_license_image_back = Common::uploadImage($vehicleModel,"driver_license_image_back",$old_driver_license_image_back);
             }
-            if (isset($requestFileparam['vehicle_registration_image_front']['name'])) {
+            if (isset($requestFileparam['vehicle_registration_image_front']['name']) && !empty($requestFileparam['vehicle_registration_image_front']['name'])) {
                 $vehicleModel->vehicle_registration_image_front = Common::uploadImage($vehicleModel,"vehicle_registration_image_front",$old_vehicle_registration_image_front);
             }
-            if (isset($requestFileparam['vehicle_registration_image_back']['name'])) {
+            if (isset($requestFileparam['vehicle_registration_image_back']['name']) && !empty($requestFileparam['vehicle_registration_image_back']['name'])) {
                 $vehicleModel->vehicle_registration_image_back = Common::uploadImage($vehicleModel,"vehicle_registration_image_back",$old_vehicle_registration_image_back);
             }
                 if($vehicleModel->save(false)){
