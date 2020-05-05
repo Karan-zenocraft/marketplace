@@ -1,3 +1,10 @@
+<style type="text/css">
+
+
+    
+.nav-list li:nth-child(2), .nav-list li:nth-child(2) a:hover{background: #006dcc;}
+.nav-list li:nth-child(2) span, .nav-list li:nth-child(2) span:hover{color: #fff!important;}
+</style>
 <?php
 
 use yii\helpers\Html;

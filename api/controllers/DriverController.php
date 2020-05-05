@@ -1195,17 +1195,17 @@ class DriverController extends \yii\base\Controller
         $snUserId = $requestParam['user_id'];
         $model = Users::findOne($snUserId);
         if (!empty($model)) {
-            $checkVehicleId = VehicleDetails::find()->with('vehicleType')->where(['user_id'=>$requestParam['user_id'],"id"=>$requestParam['vehicle_id']])->one();
+            $checkVehicleId = VehicleDetails::find()->with('vehicleType')->where(['user_id'=>$requestParam['user_id'],"id"=>$requestParam['vehicle_id']])->asArray()->all();
             if(!empty($checkVehicleId)){
-                p($checkVehicleId);
-                        $checkVehicleId['vehicle_image_front'] = Common::get_driver_image_path($checkVehicleId['vehicle_image_front']);
-                        $checkVehicleId['vehicle_image_back'] = Common::get_driver_image_path($checkVehicleId['vehicle_image_back']);
-                        $checkVehicleId['driver_license_image_front'] = Common::get_driver_image_path($checkVehicleId['driver_license_image_front']);
-                        $checkVehicleId['driver_license_image_back'] = Common::get_driver_image_path($checkVehicleId['driver_license_image_back']);
-                        $checkVehicleId['vehicle_registration_image_front'] = Common::get_driver_image_path($checkVehicleId['vehicle_registration_image_front']);
-                        $checkVehicleId['vehicle_registration_image_back'] = Common::get_driver_image_path($checkVehicleId['vehicle_registration_image_back']);
+                $vahicle = $checkVehicleId[0];
+                        $vahicle['vehicle_image_front'] = Common::get_driver_image_path($vahicle['vehicle_image_front']);
+                        $vahicle['vehicle_image_back'] = Common::get_driver_image_path($vahicle['vehicle_image_back']);
+                        $vahicle['driver_license_image_front'] = Common::get_driver_image_path($vahicle['driver_license_image_front']);
+                        $vahicle['driver_license_image_back'] = Common::get_driver_image_path($vahicle['driver_license_image_back']);
+                        $vahicle['vehicle_registration_image_front'] = Common::get_driver_image_path($vahicle['vehicle_registration_image_front']);
+                        $vahicle['vehicle_registration_image_back'] = Common::get_driver_image_path($vahicle['vehicle_registration_image_back']);
                         $ssMessage = 'Vehicle Details';
-                        $amReponseParam = $checkVehicleId;
+                        $amReponseParam = $vahicle;
                         $amResponse = Common::successResponse($ssMessage, $amReponseParam);
         }else{
             $ssMessage = 'Invalid Vehicle.';
