@@ -4,7 +4,24 @@ body {
     padding-bottom: 40px;
     background-color: #f5f5f5;
 }
+footer{bottom: 0;position: fixed!important;}
 
+.modal{right: 0;left: 0;margin: auto;z-index: 9999!important;padding-top: 0px!important;}
+.close:hover, .close:focus {
+    outline: none;
+}
+
+.close{color: #000!important;}
+.table > thead > tr > th a{white-space: nowrap;}
+.table > tbody > tr > td {white-space: nowrap;}
+#caption{text-align: center;font-size: 14px;letter-spacing: 2px;color: #000;}
+
+.modal-header{padding: 0px 0px;
+    border-bottom: 1px solid #eee;
+    padding-top: 0;
+    padding-bottom: 15px;
+}
+.Model-Center img{display: block;margin: auto;padding: 20px;}
 
 @media (min-width: 979px){
     body {

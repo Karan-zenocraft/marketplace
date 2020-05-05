@@ -12,6 +12,55 @@ $this->params['breadcrumbs'][] = ['label' => 'Manage Users', 'url' => ['users/in
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <style type="text/css">
+
+
+    
+.nav-list li:nth-child(2), .nav-list li:nth-child(2) a:hover{background: #006dcc;}
+.nav-list li:nth-child(2) span, .nav-list li:nth-child(2) span:hover{color: #fff!important;}
+
+
+
+
+
+  /* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
   .modal-body {
     position:relative; /* This avoids whatever it's absolute inside of it to go off the container */
     height: 250px; /* let's imagine that your login box height is 250px . This height needs to be added, otherwise .img-responsive will be like "Oh no, I need to be vertically aligned?! but from which value I need to be aligned??" */
@@ -152,13 +201,45 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div>
+
+<!-- The Modal -->
+  
+
+
+<!-- 
 <div id="myModal" class="modal">
   <span class="close">&times;</span>
-  <img class="img-responsive" id="img01">
+  <img class="img-fluid" id="img01">
   <div id="caption"></div>
-</div>
+</div> -->
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="Model-Center">
+          <img class="img-fluid" id="img01">
+  <div id="caption"></div>
+        </div>
+        
+        <!-- Modal footer -->
+        
+      </div>
+    </div>
+  </div>
+
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 <script type="text/javascript">
+
+
+
 $( document ).ready(function() {
 var modal = document.getElementById("myModal");
 
