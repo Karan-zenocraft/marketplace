@@ -18,10 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
 .nav-list li:nth-child(2), .nav-list li:nth-child(2) a:hover{background: #006dcc;}
 .nav-list li:nth-child(2) span, .nav-list li:nth-child(2) span:hover{color: #fff!important;}
 
-
-
-
-
   /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
@@ -89,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
          'filterModel' => null,
     'layout' => "<div class='table-scrollable'>{items}</div>\n<div class='margin-top-10'>{summary}</div>\n<div class='dataTables_paginate paging_bootstrap pagination'>{pager}</div>",
         'columns' => [
-           // ['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'yii\grid\SerialColumn'],
 
           //  'id',
           //  'user_id',
