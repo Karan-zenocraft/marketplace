@@ -19,7 +19,7 @@ use common\models\NotificationList;
 /**
  * MainController implements the CRUD actions for APIs.
  */
-class PassangerController extends \yii\base\Controller
+class PassengerController extends \yii\base\Controller
 {
     /*
      * Function : Login()
