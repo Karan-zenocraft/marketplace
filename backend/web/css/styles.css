@@ -4,22 +4,24 @@ body {
     padding-bottom: 40px;
     background-color: #f5f5f5;
 }
-footer{padding: 30px 0px;
+footer{padding: 10px 0px;
     position: fixed !important;
     bottom: 0;
-    background: #fff;
+    height: unset!important;
+    background-image: linear-gradient(to bottom,#fff,#f2f2f2);
     border-top: 1px solid #d4d4d4;
     width: 100%;
     z-index: 999;
     box-shadow: 0 1px 10px rgba(0,0,0,0.1);
 }
 
-footer .pull-left{margin: 0;padding: 0;}
+footer .text-center{margin: 0;padding: 0;}
 
 /*.row-fluid{
     padding-top: 15px;
 }*/
 
+#content .block{margin-bottom: 8em;}
 .modal{right: 0;left: 0;margin: auto;z-index: 9999!important;padding-top: 0px!important;}
 .close:hover, .close:focus {
     outline: none;
