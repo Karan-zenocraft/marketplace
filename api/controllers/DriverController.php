@@ -1217,4 +1217,44 @@ class DriverController extends \yii\base\Controller
         // FOR ENCODE RESPONSE INTO JSON //
         Common::encodeResponseJSON($amResponse);
     }
+
+      public function actionRefreshDeviceToken()
+    {
+
+        $amData = Common::checkRequestType();
+
+        $amResponse = $amReponseParam = [];
+
+        // Check required validation for request parameter.
+        $amRequiredParams = array('user_id', 'device_token');
+
+        $amParamsResult = Common::checkRequiredParams($amData['request_param'], $amRequiredParams);
+
+        // If any getting error in request paramter then set error message.
+        if (!empty($amParamsResult['error'])) {
+            $amResponse = Common::errorResponse($amParamsResult['error']);
+            Common::encodeResponseJSON($amResponse);
+        }
+        $requestParam = $amData['request_param'];
+        //Check User Status//
+        Common::matchUserStatus($requestParam['user_id']);
+        //VERIFY AUTH TOKEN
+        /*  $authToken = Common::get_header('auth_token');
+        Common::checkAuthentication($authToken);*/
+        $oModelUser = Users::findOne($requestParam['user_id']);
+        if (!empty($oModelUser)) {
+            $deviceModel = DeviceDetails::find()->where(["user_id" => $requestParam['user_id']])->one();
+            $deviceModel->device_tocken = $requestParam['device_token'];
+            $deviceModel->save(false);
+            $deviceModel->gcm_id = !empty($deviceModel->gcm_id) ? $deviceModel->gcm_id : "";
+            $ssMessage = "Device Token updated successfully.";
+            $amReponseParam = $deviceModel;
+            $amResponse = Common::successResponse($ssMessage, $amReponseParam);
+        } else {
+            $ssMessage = 'Invalid User.';
+            $amResponse = Common::errorResponse($ssMessage);
+        }
+        // FOR ENCODE RESPONSE INTO JSON //
+        Common::encodeResponseJSON($amResponse);
+    }
 }

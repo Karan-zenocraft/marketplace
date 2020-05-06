@@ -141,7 +141,7 @@ class PassengerController extends \yii\base\Controller
                         $amReponseParam['first_name'] = $model->first_name;
                         $amReponseParam['last_name'] = $model->last_name;
                         $amReponseParam['role'] = $model->role_id;
-                        $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "no_image.png";
+                         $amReponseParam['photo'] = !empty($model->photo) ? $model->photo : Yii::$app->params['root_url'] . '/' . "no_image.png";
                         $amReponseParam['device_token'] = $device_model->device_tocken;
                         $amReponseParam['device_type'] = $device_model->type;
                         $amReponseParam['auth_token'] = $ssAuthToken;
@@ -535,7 +535,7 @@ class PassengerController extends \yii\base\Controller
      * Author : Rutusha Joshi
      */
 
-    public function actionChangePassword()
+        public function actionChangePassword()
     {
 
         $amData = Common::checkRequestType();
@@ -792,451 +792,6 @@ class PassengerController extends \yii\base\Controller
     }
 
 
-    public function actionEditVehicleDetails()
-    {
-        //Get all request parameter
-        $amData = Common::checkRequestType();
-        $amResponse = $amReponseParam = [];
-
-        // Check required validation for request parameter.
-        $amRequiredParams = array('user_id','vehicle_id','name', 'vehicle_type_id', 'seat_capacity', 'vehicle_registration_no');
-        $amParamsResult = Common::checkRequestParameterKey($amData['request_param'], $amRequiredParams);
-
-        // If any getting error in request paramter then set error message.
-        if (!empty($amParamsResult['error'])) {
-            $amResponse = Common::errorResponse($amParamsResult['error']);
-            Common::encodeResponseJSON($amResponse);
-        }
-
-        $requestParam = $amData['request_param'];
-        $requestFileparam = $amData['file_param'];
-                //Check User Status//
-        Common::matchUserStatus($requestParam['user_id']);
-        //VERIFY AUTH TOKEN
-        $authToken = Common::get_header('auth_token');
-        Common::checkAuthentication($authToken, $requestParam['user_id']);
-        $snUserId = $requestParam['user_id'];
-        $model = Users::findOne(["id" => $snUserId]);
-        if (!empty($model)) {
-            $vehicleModel = VehicleDetails::find()->where(["id"=>$requestParam['vehicle_id']])->one();
-            if(!empty($vehicleModel)){
-                $vehicleModel->name = $requestParam['name'];
-                $vehicleModel->vehicle_type_id = $requestParam['vehicle_type_id'];
-                $vehicleModel->seat_capacity = $requestParam['seat_capacity'];
-                $vehicleModel->vehicle_registration_no = $requestParam['vehicle_registration_no'];
-                $old_vehicle_image_front = $vehicleModel->vehicle_image_front;
-                $old_vehicle_image_back = $vehicleModel->vehicle_image_back;
-                $old_driver_license_image_front = $vehicleModel->driver_license_image_front;
-                $old_driver_license_image_back  = $vehicleModel->driver_license_image_back;
-                $old_vehicle_registration_image_front  = $vehicleModel->vehicle_registration_image_front;
-                $old_vehicle_registration_image_back  = $vehicleModel->vehicle_registration_image_back;
-            if (isset($requestFileparam['vehicle_image_front']['name']) && !empty($requestFileparam['vehicle_image_front']['name'])) {
-                $vehicleModel->vehicle_image_front = Common::uploadImage($vehicleModel,"vehicle_image_front",$old_vehicle_image_front);
-            }
-            if (isset($requestFileparam['vehicle_image_back']['name']) && !empty($requestFileparam['vehicle_image_back']['name'])) {
-                $vehicleModel->vehicle_image_back = Common::uploadImage($vehicleModel,"vehicle_image_back",$old_vehicle_image_back);
-            }
-            if (isset($requestFileparam['driver_license_image_front']['name']) && !empty($requestFileparam['driver_license_image_front']['name'])) {
-                $vehicleModel->driver_license_image_front = Common::uploadImage($vehicleModel,"driver_license_image_front",$old_driver_license_image_front);
-            }
-            if (isset($requestFileparam['driver_license_image_back']['name']) && !empty($requestFileparam['driver_license_image_back']['name'])) {
-                $vehicleModel->driver_license_image_back = Common::uploadImage($vehicleModel,"driver_license_image_back",$old_driver_license_image_back);
-            }
-            if (isset($requestFileparam['vehicle_registration_image_front']['name']) && !empty($requestFileparam['vehicle_registration_image_front']['name'])) {
-                $vehicleModel->vehicle_registration_image_front = Common::uploadImage($vehicleModel,"vehicle_registration_image_front",$old_vehicle_registration_image_front);
-            }
-            if (isset($requestFileparam['vehicle_registration_image_back']['name']) && !empty($requestFileparam['vehicle_registration_image_back']['name'])) {
-                $vehicleModel->vehicle_registration_image_back = Common::uploadImage($vehicleModel,"vehicle_registration_image_back",$old_vehicle_registration_image_back);
-            }
-                if($vehicleModel->save(false)){
-                    if($vehicleModel->is_approve == Yii::$app->params['is_approve_vehicle_value']['decline']){
-                    $emailformatemodel = EmailFormat::findOne(["title" => 'approve_updated_vehicle', "status" => '1']);
-                    if ($emailformatemodel) {
-
-                        //create template file
-                        $AreplaceString = array('{driver_name}' => $model->first_name." ".$model->last_name,'{vehicle_name}'=>$vehicleModel->name);
-
-                        $body = Common::MailTemplate($AreplaceString, $emailformatemodel->body);
-                        $ssSubject = $emailformatemodel->subject;
-                        //send email for new generated password
-                        $ssResponse = Common::sendMail(Yii::$app->params['marveladminEmail'], Yii::$app->params['adminEmail'], $ssSubject, $body);
-
-                    }
-                    }
-
-                $vehicleModel->vehicle_image_front = Common::get_driver_image_path($vehicleModel->vehicle_image_front);
-                $vehicleModel->vehicle_image_back = Common::get_driver_image_path($vehicleModel->vehicle_image_back);
-                $vehicleModel->driver_license_image_front = Common::get_driver_image_path($vehicleModel->driver_license_image_front);
-                $vehicleModel->driver_license_image_back = Common::get_driver_image_path($vehicleModel->driver_license_image_back);
-                $vehicleModel->vehicle_registration_image_front = Common::get_driver_image_path($vehicleModel->vehicle_registration_image_front);
-                $vehicleModel->vehicle_registration_image_back = Common::get_driver_image_path($vehicleModel->vehicle_registration_image_back);
-                $amReponseParam = $vehicleModel;
-                $ssMessage = "Vehicle Details Updated Successfully.";
-                $amResponse = Common::successResponse($ssMessage,$amReponseParam);
-                }
-            }else{
-                    $ssMessage = 'Vehicle Details not found';
-                    $amResponse = Common::errorResponse($ssMessage);
-            }
-            } else {
-                $ssMessage = 'Invalid User.';
-                $amResponse = Common::errorResponse($ssMessage);
-            }
-    
-        
-        // FOR ENCODE RESPONSE INTO JSON //
-        Common::encodeResponseJSON($amResponse);
-    }
-    /*
-     * Function : GetUserDetails()
-     * Description : Get User Details
-     * Request Params : user_id
-     * Response Params : user's details
-     * Author : Rutusha Joshi
-     */
-
-    public function actionGetDriverVehicleDetails()
-    {
-        //Get all request parameter
-        $amData = Common::checkRequestType();
-        $amResponse = $amReponseParam = [];
-
-        // Check required validation for request parameter.
-        $amRequiredParams = array('user_id');
-        $amParamsResult = Common::checkRequestParameterKey($amData['request_param'], $amRequiredParams);
-
-        // If any getting error in request paramter then set error message.
-        if (!empty($amParamsResult['error'])) {
-            $amResponse = Common::errorResponse($amParamsResult['error']);
-            Common::encodeResponseJSON($amResponse);
-        }
-
-        $requestParam = $amData['request_param'];
-        //Check User Status//
-        Common::matchUserStatus($requestParam['user_id']);
-        //VERIFY AUTH TOKEN
-        $authToken = Common::get_header('auth_token');
-        Common::checkAuthentication($authToken, $requestParam['user_id']);
-        $snUserId = $requestParam['user_id'];
-        $model = Users::findOne(["id" => $snUserId]);
-        if (!empty($model)) {
-            // Device Registration
-            $ssMessage = 'User Profile Details.';
-            $amResponse = Common::successResponse($ssMessage, array_map('strval', $amReponseParam));
-        } else {
-            $ssMessage = 'Invalid User.';
-            $amResponse = Common::errorResponse($ssMessage);
-        }
-        // FOR ENCODE RESPONSE INTO JSON //
-        Common::encodeResponseJSON($amResponse);
-    }
-
-    /*
-     * Function :
-     * Description : Reset Badge Count
-     * Request Params :'user_id','auth_token'
-     * Response Params :
-     * Author :Rutusha Joshi
-     */
-    public function actionResetBadgeCount()
-    {
-
-        $amData = Common::checkRequestType();
-
-        $amResponse = $amReponseParam = [];
-
-        // Check required validation for request parameter.
-        $amRequiredParams = array('user_id');
-
-        $amParamsResult = Common::checkRequiredParams($amData['request_param'], $amRequiredParams);
-
-        // If any getting error in request paramter then set error message.
-        if (!empty($amParamsResult['error'])) {
-            $amResponse = Common::errorResponse($amParamsResult['error']);
-            Common::encodeResponseJSON($amResponse);
-        }
-        $requestParam = $amData['request_param'];
-        //Check User Status//
-        Common::matchUserStatus($requestParam['user_id']);
-        //VERIFY AUTH TOKEN
-        $authToken = Common::get_header('auth_token');
-        Common::checkAuthentication($authToken, $requestParam['user_id']);
-        $oModelUser = Users::findOne($requestParam['user_id']);
-        if (!empty($oModelUser)) {
-
-            $oModelUser->badge_count = 0;
-            $oModelUser->save(false);
-            $ssMessage = "Badge count updated successfully.";
-            $amResponse = Common::successResponse($ssMessage);
-        } else {
-            $ssMessage = 'Invalid User.';
-            $amResponse = Common::errorResponse($ssMessage);
-        }
-        // FOR ENCODE RESPONSE INTO JSON //
-        Common::encodeResponseJSON($amResponse);
-    }
-
-     public function actionGetVehicleTypes()
-    {
-
-        $amData = Common::checkRequestType();
-
-        $amResponse = $amReponseParam = [];
-
-        // Check required validation for request parameter.
-        $amRequiredParams = array('user_id');
-        $amParamsResult = Common::checkRequiredParams($amData['request_param'], $amRequiredParams);
-        // If any getting error in request paramter then set error message.
-        if (!empty($amParamsResult['error'])){
-            $amResponse = Common::errorResponse($amParamsResult['error']);
-            Common::encodeResponseJSON($amResponse);
-        }
-        
-        $requestParam = $amData['request_param'];
-        //Check User Status//
-        Common::matchUserStatus($requestParam['user_id']);
-        //VERIFY AUTH TOKEN
-        $authToken = Common::get_header('auth_token');
-        Common::checkAuthentication($authToken, $requestParam['user_id']);
-        $oModelUser = Users::findOne($requestParam['user_id']);
-        if (!empty($oModelUser)) {
-            $vehicleTypesArr = VehicleTypes::find()->where(['status'=>"1"])->asArray()->all();
-            if(!empty($vehicleTypesArr)){
-                $amReponseParam = $vehicleTypesArr;
-                $ssMessage = "Vehicle Types list";
-                $amResponse = Common::successResponse($ssMessage,$amReponseParam);
-            }else{
-                $ssMessage = "Vehicle Types not found";
-                $amResponse = Common::successResponse($ssMessage,$amReponseParam);
-            }
-            
-        } else {
-            $ssMessage = 'Invalid User.';
-            $amResponse = Common::errorResponse($ssMessage);
-        }
-        // FOR ENCODE RESPONSE INTO JSON //
-        Common::encodeResponseJSON($amResponse);
-    }
-
-       public function actionAddDriverBankDetails()
-    {
-        //Get all request parameter
-        $amData = Common::checkRequestType();
-        $amResponse = $amReponseParam = [];
-        // Check required validation for request parameter.
-        $amRequiredParams = array('user_id', 'stripe_bank_account_holder_name', 'stripe_bank_account_holder_type', 'stripe_bank_routing_number', 'stripe_bank_account_number');
-        $amParamsResult = Common::checkRequestParameterKey($amData['request_param'], $amRequiredParams);
-
-        // If any getting error in request paramter then set error message.
-        if (!empty($amParamsResult['error'])) {
-            $amResponse = Common::errorResponse($amParamsResult['error']);
-            Common::encodeResponseJSON($amResponse);
-        }
-        $requestParam = $amData['request_param'];
-        Common::matchUserStatus($requestParam['user_id']);
-        //VERIFY AUTH TOKEN
-        $authToken = Common::get_header('auth_token');
-        Common::checkAuthentication($authToken, $requestParam['user_id']);
-        //Check User Status//
-        $snUserId = $requestParam['user_id'];
-        $model = Users::findOne(["id" => $snUserId]);
-        if (!empty($model)) {
-            $AccountDetails = DriverAccountDetails::find()->where(["user_id" => $requestParam['user_id']])->one();
-            if (!empty($AccountDetails)) {
-                $ssMessage = 'Your account details are already added';
-                $amResponse = Common::errorResponse($ssMessage);
-                Common::encodeResponseJSON($amResponse);
-            }
-// Generate Stripe Bank account and connect account from the data
-            \Stripe\Stripe::setApiKey("sk_test_xQWSZTWSuFJ7nXVEQtYdah7T00VZB1z5Fd");
-            try {
-                // first create bank token
-                $bankToken = \Stripe\Token::create([
-                    'bank_account' => [
-                        'country' => 'US',
-                        'currency' => 'usd',
-                        'account_holder_name' => $requestParam['stripe_bank_account_holder_name'],
-                        'account_holder_type' => $requestParam['stripe_bank_account_holder_type'],
-                        'routing_number' => $requestParam['stripe_bank_routing_number'],
-                        'account_number' => $requestParam['stripe_bank_account_number'],
-                    ],
-                ]);
-                $account_holder_name = explode(" ", $requestParam['stripe_bank_account_holder_name']);
-                $first_name = $account_holder_name[0];
-                $last_name = $account_holder_name[1];
-                // second create stripe account
-                $stripeAccount = \Stripe\Account::create([
-                    "type" => "custom",
-                    "country" => "US",
-                    "email" => $model->email,
-                    "business_type" => "individual",
-                    "business_profile" => [
-                        "url" => "http://www.zenocraft.com",
-                    ],
-                    "individual" => [
-                        "first_name" => $first_name,
-                        "last_name" => $last_name,
-                    ],
-                    "requested_capabilities" => ['transfers'],
-                ]);
-                // third link the bank account with the stripe account
-                $bankAccount = \Stripe\Account::createExternalAccount(
-                    $stripeAccount->id, ['external_account' => $bankToken->id]
-                );
-                // Fourth stripe account update for tos acceptance
-                \Stripe\Account::update(
-                    $stripeAccount->id, [
-                        'tos_acceptance' => [
-                            'date' => time(),
-                            'ip' => $_SERVER['REMOTE_ADDR'], // Assumes you're not using a proxy
-                        ],
-                    ]
-                );
-                $response = ["bankToken" => $bankToken->id, "stripeAccount" => $stripeAccount->id, "bankAccount" => $bankAccount->id];
-                $accountDetailModel = new DriverAccountDetails();
-                $accountDetailModel->user_id = $requestParam['user_id'];
-                $accountDetailModel->stripe_bank_account_holder_name = $requestParam['stripe_bank_account_holder_name'];
-                $accountDetailModel->stripe_bank_account_holder_type = $requestParam['stripe_bank_account_holder_type'];
-                $accountDetailModel->stripe_bank_routing_number = $requestParam['stripe_bank_routing_number'];
-                $accountDetailModel->stripe_bank_account_number = $requestParam['stripe_bank_account_number'];
-                $accountDetailModel->stripe_bank_token = $response['bankToken'];
-                $accountDetailModel->stripe_connect_account_id = $response['stripeAccount'];
-                $accountDetailModel->stripe_bank_accout_id = $response['bankAccount'];
-                $accountDetailModel->save(false);
-                $amReponseParam = $accountDetailModel;
-                $ssMessage = 'Stripe account detail successfully added.';
-                $amResponse = Common::successResponse($ssMessage, $amReponseParam);
-
-            } catch (\Exception $e) {
-                p($e, 0);
-                $ssMessage = 'Something went wrong';
-                $amResponse = Common::errorResponse($ssMessage);
-            }
-
-        } else {
-            $ssMessage = 'Invalid User.';
-            $amResponse = Common::errorResponse($ssMessage);
-        }
-        // FOR ENCODE RESPONSE INTO JSON //
-        Common::encodeResponseJSON($amResponse);
-    }
-
-        public function actionGetMyVehicleList()
-    {
-
-        $amData = Common::checkRequestType();
-
-        $amResponse = $amReponseParam = [];
-
-        // Check required validation for request parameter.
-        $amRequiredParams = array('user_id');
-        $amParamsResult = Common::checkRequiredParams($amData['request_param'], $amRequiredParams);
-        // If any getting error in request paramter then set error message.
-        if (!empty($amParamsResult['error'])){
-            $amResponse = Common::errorResponse($amParamsResult['error']);
-            Common::encodeResponseJSON($amResponse);
-        }
-        
-        $requestParam = $amData['request_param'];
-        //Check User Status//
-        Common::matchUserStatus($requestParam['user_id']);
-        //VERIFY AUTH TOKEN
-        $authToken = Common::get_header('auth_token');
-        Common::checkAuthentication($authToken, $requestParam['user_id']);
-        $oModelUser = Users::findOne($requestParam['user_id']);
-        if (!empty($oModelUser)) {
-            $vehicleList = VehicleDetails::find()->with('vehicleType')->where(['user_id'=>$requestParam['user_id']])->asArray()->all();
-            if(!empty($vehicleList)){
-            array_walk($vehicleList, function ($arr) use (&$amResponseData) {
-                $ttt = $arr;
-                $ttt['admin_message'] = !empty($ttt['admin_message']) ? $ttt['admin_message'] : "";
-                $ttt['vehicle_image_front'] = Common::get_driver_image_path($ttt['vehicle_image_front']);
-                $ttt['vehicle_image_back'] = Common::get_driver_image_path($ttt['vehicle_image_back']);
-                $ttt['driver_license_image_front'] = Common::get_driver_image_path($ttt['driver_license_image_front']);
-                $ttt['driver_license_image_back'] = Common::get_driver_image_path($ttt['driver_license_image_back']);
-                $ttt['vehicle_registration_image_front'] = Common::get_driver_image_path($ttt['vehicle_registration_image_front']);
-                $ttt['vehicle_registration_image_back'] = Common::get_driver_image_path($ttt['vehicle_registration_image_back']);
-                        $amResponseData[] = $ttt;
-                        return $amResponseData;
-                    });
-                $amReponseParam = $amResponseData;
-                $ssMessage = "My Vehicle list";
-                $amResponse = Common::successResponse($ssMessage,$amReponseParam);
-            }else{
-                $ssMessage = "Vehicles not found";
-                $amResponse = Common::successResponse($ssMessage,$amReponseParam);
-            }
-            
-        } else {
-            $ssMessage = 'Invalid User.';
-            $amResponse = Common::errorResponse($ssMessage);
-        }
-        // FOR ENCODE RESPONSE INTO JSON //
-        Common::encodeResponseJSON($amResponse);
-    }
-
-      public function actionSetDefaultVehicle()
-    {
-
-        $amData = Common::checkRequestType();
-
-        $amResponse = $amReponseParam = [];
-
-        // Check required validation for request parameter.
-        $amRequiredParams = array('user_id','vehicle_id');
-        $amParamsResult = Common::checkRequiredParams($amData['request_param'], $amRequiredParams);
-        // If any getting error in request paramter then set error message.
-        if (!empty($amParamsResult['error'])){
-            $amResponse = Common::errorResponse($amParamsResult['error']);
-            Common::encodeResponseJSON($amResponse);
-        }
-        
-        $requestParam = $amData['request_param'];
-        //Check User Status//
-        Common::matchUserStatus($requestParam['user_id']);
-        //VERIFY AUTH TOKEN
-        $authToken = Common::get_header('auth_token');
-        Common::checkAuthentication($authToken, $requestParam['user_id']);
-        $oModelUser = Users::findOne($requestParam['user_id']);
-        if (!empty($oModelUser)) {
-            $checkVehicleId = VehicleDetails::find()->where(['user_id'=>$requestParam['user_id'],"id"=>$requestParam['vehicle_id']])->one();
-            if(!empty($checkVehicleId)){
-                $vehicleDefaultSet = VehicleDetails::updateAll(['is_default' => '0'], ['user_id' => $requestParam['user_id']]);
-                $checkVehicleId->is_default = "1";
-                $checkVehicleId->save(false);
-                $vehicleList = VehicleDetails::find()->where(['user_id'=>$requestParam['user_id']])->asArray()->all();
-                if(!empty($vehicleList)){
-                    array_walk($vehicleList, function ($arr) use (&$amResponseData) {
-                        $ttt = $arr;
-                        $ttt['vehicle_image_front'] = Common::get_driver_image_path($ttt['vehicle_image_front']);
-                        $ttt['vehicle_image_back'] = Common::get_driver_image_path($ttt['vehicle_image_back']);
-                        $ttt['driver_license_image_front'] = Common::get_driver_image_path($ttt['driver_license_image_front']);
-                        $ttt['driver_license_image_back'] = Common::get_driver_image_path($ttt['driver_license_image_back']);
-                        $ttt['vehicle_registration_image_front'] = Common::get_driver_image_path($ttt['vehicle_registration_image_front']);
-                        $ttt['vehicle_registration_image_back'] = Common::get_driver_image_path($ttt['vehicle_registration_image_back']);
-                                $amResponseData[] = $ttt;
-                                return $amResponseData;
-                    });
-                $amReponseParam = $amResponseData;
-                $ssMessage = "Default Vehicle set successfully.";
-                $amResponse = Common::successResponse($ssMessage,$amReponseParam);
-            }else{
-                $ssMessage = "Vehicles not found";
-                $amResponse = Common::successResponse($ssMessage,$amReponseParam);
-            }
-        }else{
-            $ssMessage = 'Invalid Vehicle.';
-            $amResponse = Common::errorResponse($ssMessage);
-        }
-            
-        } else {
-            $ssMessage = 'Invalid User.';
-            $amResponse = Common::errorResponse($ssMessage);
-        }
-        // FOR ENCODE RESPONSE INTO JSON //
-        Common::encodeResponseJSON($amResponse);
-    }
-
       public function actionGetNotificationList()
     {
         //Get all request parameter
@@ -1320,6 +875,46 @@ class PassengerController extends \yii\base\Controller
             $ssMessage = 'Invalid Vehicle.';
             $amResponse = Common::errorResponse($ssMessage);
         }
+        } else {
+            $ssMessage = 'Invalid User.';
+            $amResponse = Common::errorResponse($ssMessage);
+        }
+        // FOR ENCODE RESPONSE INTO JSON //
+        Common::encodeResponseJSON($amResponse);
+    }
+
+      public function actionRefreshDeviceToken()
+    {
+
+        $amData = Common::checkRequestType();
+
+        $amResponse = $amReponseParam = [];
+
+        // Check required validation for request parameter.
+        $amRequiredParams = array('user_id', 'device_token');
+
+        $amParamsResult = Common::checkRequiredParams($amData['request_param'], $amRequiredParams);
+
+        // If any getting error in request paramter then set error message.
+        if (!empty($amParamsResult['error'])) {
+            $amResponse = Common::errorResponse($amParamsResult['error']);
+            Common::encodeResponseJSON($amResponse);
+        }
+        $requestParam = $amData['request_param'];
+        //Check User Status//
+        Common::matchUserStatus($requestParam['user_id']);
+        //VERIFY AUTH TOKEN
+        /*  $authToken = Common::get_header('auth_token');
+        Common::checkAuthentication($authToken);*/
+        $oModelUser = Users::findOne($requestParam['user_id']);
+        if (!empty($oModelUser)) {
+            $deviceModel = DeviceDetails::find()->where(["user_id" => $requestParam['user_id']])->one();
+            $deviceModel->device_tocken = $requestParam['device_token'];
+            $deviceModel->save(false);
+            $deviceModel->gcm_id = !empty($deviceModel->gcm_id) ? $deviceModel->gcm_id : "";
+            $ssMessage = "Device Token updated successfully.";
+            $amReponseParam = $deviceModel;
+            $amResponse = Common::successResponse($ssMessage, $amReponseParam);
         } else {
             $ssMessage = 'Invalid User.';
             $amResponse = Common::errorResponse($ssMessage);
