@@ -45,7 +45,7 @@ class Users extends \yii\db\ActiveRecord
     {
         return [
             [['role_id','badge_count', 'status'], 'integer'],
-            [['created_at', 'updated_at','first_name','last_name','phone','photo','email_verification_code','is_email_code_verified','is_phone_code_verified','user_status','wallet'], 'safe'],
+            [['created_at', 'updated_at','first_name','last_name','phone','photo','email_verification_code','is_email_code_verified','is_phone_code_verified','user_status','wallet','login_type'], 'safe'],
             [['first_name', 'email', 'password', 'photo'], 'string', 'max' => 255],
             [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserRole::className(), 'targetAttribute' => ['role_id' => 'id']],
         ];
@@ -61,6 +61,7 @@ class Users extends \yii\db\ActiveRecord
             'role_id' => 'Role ID',
             'first_name' => 'First Name',
             'last_name' => 'Last Name',
+            'login_type' => "Login Type",
             'email' => 'Email',
             'password' => 'Password',
             'age' => 'Age',

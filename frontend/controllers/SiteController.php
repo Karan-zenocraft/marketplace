@@ -254,9 +254,10 @@ class SiteController extends Controller
             $user->save(false);
             Yii::$app->getSession()->setFlash('success', Yii::getAlias('Your Email is successfully verified.Please login in website.'));
             return $this->redirect(\Yii::$app->urlManager->createUrl(['site/index']));
-        } else if (!empty($user) && ($user->is_code_verified == "1")) {
-            Yii::$app->getSession()->setFlash('fail', 'Your Email is already verified.');
-            return $this->redirect(\Yii::$app->urlManager->createUrl(['site/index']));
+        } else if (!empty($user) && ($user->is_email_code_verified == "1")) {
+            p( 'Your Email is already verified.');
+           /* Yii::$app->getSession()->setFlash('fail', 'Your Email is already verified.');
+            return $this->redirect(\Yii::$app->urlManager->createUrl(['site/index']));*/
         } else {
             Yii::$app->getSession()->setFlash('fail', 'Something went wrong please check your link');
             return $this->redirect(\Yii::$app->urlManager->createUrl(['site/index']));
