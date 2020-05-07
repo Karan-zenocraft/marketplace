@@ -44,7 +44,9 @@ class PassengerController extends \yii\base\Controller
             Common::encodeResponseJSON($amResponse);
         }
         $requestParam = $amData['request_param'];
-        if ($requestParam['login_type'] == "1") {
+
+        // NORMAL LOGIN WITH EMAIL AND PASSWORD 
+        if ($requestParam['login_type'] == "1") { 
             $amRequiredParams = array('email', 'password', 'device_id', 'login_type', 'device_type');
             $amParamsResult = Common::checkRequestParameterKey($amData['request_param'], $amRequiredParams);
 
@@ -90,7 +92,11 @@ class PassengerController extends \yii\base\Controller
                     $amReponseParam['first_name'] = $model->first_name;
                     $amReponseParam['last_name'] = $model->last_name;
                     $amReponseParam['role'] = $model->role_id;
-                     $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "no_image.png";
+                    if($model->login_type == "1"){
+                        $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "no_image.png"; 
+                    }else{
+                        $amReponseParam['photo'] = !empty($model->photo) ? $model->photo : Yii::$app->params['root_url'] . '/' . "no_image.png";
+                    }
                     $amReponseParam['device_token'] = $device_model->device_tocken;
                     $amReponseParam['device_type'] = $device_model->type;
                     $amReponseParam['auth_token'] = $ssAuthToken;
@@ -110,9 +116,10 @@ class PassengerController extends \yii\base\Controller
                 $amResponse = Common::errorResponse($amParamsResult['error']);
                 Common::encodeResponseJSON($amResponse);
             }
+            //CHECK LOGIN EMAIL IS EXIST IN
             if (($model = Users::findOne(['email' => $requestParam['email']])) !== null) {
                 if ($model->login_type == $requestParam['login_type']) {
-                    if (($modell = Users::findOne(['email' => $requestParam['email'], 'password' => md5($requestParam['password']), 'role_id' => [Yii::$app->params['userroles']['super_admin'], Yii::$app->params['userroles']['admin'], Yii::$app->params['userroles']['driver']]])) !== null) {
+                    if (($modell = Users::findOne(['email' => $requestParam['email'],'role_id' => [Yii::$app->params['userroles']['super_admin'], Yii::$app->params['userroles']['admin'], Yii::$app->params['userroles']['driver']]])) !== null) {
                         $ssMessage = ' You are not authorize to login.';
                         $amResponse = Common::errorResponse($ssMessage);
                     } else if (($model1 = Users::findOne(['email' => $requestParam['email'], 'status' => "0"])) !== null) {
