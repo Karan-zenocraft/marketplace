@@ -589,7 +589,11 @@ class PassengerController extends \yii\base\Controller
             //$amReponseParam['phone'] = $model->phone;
                  $amReponseParam['email_verification_code'] = $model->email_verification_code;
                  $amReponseParam['is_phone_code_verified'] = $model->is_phone_code_verified;
-                 $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "no_image.png";
+                     if($model->login_type == "1"){
+                        $amReponseParam['photo'] = !empty($model->photo) && file_exists(Yii::getAlias('@root') . '/' . "uploads/profile_pictures/" . $model->photo) ? Yii::$app->params['root_url'] . '/' . "uploads/profile_pictures/" . $model->photo : Yii::$app->params['root_url'] . '/' . "no_image.png"; 
+                    }else{
+                        $amReponseParam['photo'] = !empty($model->photo) ? $model->photo : Yii::$app->params['root_url'] . '/' . "no_image.png";
+                    }
                  $device_model = Devicedetails::findOne(['user_id' => $model->id]);
                  $amReponseParam['device_token'] = (!empty($device_model) && !empty($device_model->device_tocken)) ? $device_model->device_tocken : "";
                  $amReponseParam['device_type'] = (!empty($device_model) && !empty($device_model->type)) ? Yii::$app->params['device_type_value'][$device_model->type] : "";
